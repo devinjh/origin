@@ -3,7 +3,8 @@
 // 4190350
 
 #include <iostream>
-#include "classifications.cpp"
+//#include "classifications.cpp"
+#include "deck.cpp"
 
 using std::cout;
 using std::endl;
@@ -16,6 +17,7 @@ void testFunction()
 int main(int argc, char const *argv[])
 {
     testFunction();
+    Deck deck();
     cout << "Test" << endl;
     return 0;
 }
