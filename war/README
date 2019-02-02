@@ -1,0 +1,8 @@
+This game requires there to be two decks of cards, one for player one and another for player two.
+The game involves both players playing the top card of their deck and determining who's card is
+higher in rank. The player who's card is higher in rank gets to take both of the cards and add
+them to their deck. If the player's cards are equal in rank, then they go to war. This means each
+player lays down an additional three cards and the last card to be revealedis compared. The player
+with the highest rank of this last card gets all the cards currently in play. If a tie happens
+agina, this is repeated until a winner is eventually decided upon. The game keeps going until one
+player is out of cards and loses.
