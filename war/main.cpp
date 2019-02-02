@@ -4,20 +4,33 @@
 
 #include <iostream>
 //#include "classifications.cpp"
-#include "deck.cpp"
+#include "deck.hpp"
 
 using std::cout;
 using std::endl;
 
+/*
 void testFunction()
 {
     cout << "Hello World!" << endl;
 }
+*/
 
 int main(int argc, char const *argv[])
 {
-    testFunction();
-    Deck deck();
-    cout << "Test" << endl;
+    // Creating the deck object and filling it
+    Deck deck;
+
+    // Viewing the entire deck
+    //deck.viewDeck();
+
+    // Shuffles the deck
+    deck.shuffle();
+
+    //std::cout << "Shuffle!" << std::endl;
+    //deck.viewDeck();
+
+    deck.playWar();
+
     return 0;
 }
