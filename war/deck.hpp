@@ -9,43 +9,30 @@ class Deck{
 
 private:
 
-/*
-    Card deck[52];
+    Card playerOneDeck[52], playerTwoDeck[52];
 
     void createCard(Card &sentCard, int x);
     
-    void fillDeck();
+    void fillDecks();
 
-*/
+    void printCard(Card &sentCard);
+
+    void changeCards(int cardGetter, int numOfCards);
+
+    int findEndOfDeck(int deckNum);
+
+    void shiftDeck(int deckShifter);
 
 public:
 
     Deck();
 
-    void viewDeck();
+    void viewDecks();
 
-    Card deck[52];
+    bool getWinner();
 
-    void createCard(Card &sentCard, int x);
-    
-    void fillDeck();
+    void printWinner();
 
-    std::string printSuit(Card &sentCard);
-
-    std::string printRank(Card &sentCard);
-
-    void shuffle();
-
-    void swap(int firstSwap, int secondSwap);
-
-    void playWar();
-
-    void playCard(Card oneDeck[], Card twoDeck[]);
-
-    int findEndOfDeck(Card randomDeck[]);
-
-    void cleanseWarZoneCards(Card playerOneDeck[], Card playerTwoDeck[], Card warZone[], bool playerOneWinner);
-
-    void shiftDeckOver(Card aDeck[]);
+    void goToWar(int numOfCardsPassed);
 
 };

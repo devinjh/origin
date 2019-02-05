@@ -2,35 +2,21 @@
 // Devin Hopkins
 // 4190350
 
-#include <iostream>
-//#include "classifications.cpp"
 #include "deck.hpp"
-
-using std::cout;
-using std::endl;
-
-/*
-void testFunction()
-{
-    cout << "Hello World!" << endl;
-}
-*/
 
 int main(int argc, char const *argv[])
 {
     // Creating the deck object and filling it
-    Deck deck;
+    Deck war;
 
-    // Viewing the entire deck
-    //deck.viewDeck();
+    // Playing the game of war
+    while(!(war.getWinner()))
+    {
+        war.goToWar(1);
+    }
 
-    // Shuffles the deck
-    deck.shuffle();
-
-    //std::cout << "Shuffle!" << std::endl;
-    //deck.viewDeck();
-
-    deck.playWar();
+    // Printing the winner
+    war.printWinner();
 
     return 0;
 }

@@ -2,12 +2,63 @@
 // Devin Hopkins
 // 4190350
 
-#include <iostream>
-//#include "classifications.cpp"
 #include "deck.hpp"
+
+Deck::Deck()
+{
+    fillDecks();
+}
+
+void Deck::fillDecks()
+{
+    // This fills the original deck up with 52 cards
+    Card card;
+    Card deck[52];
+    for (int x = 0; x < 52; ++x)
+    {
+        createCard(card, x);
+        deck[x] = card;
+    }
+
+    // This shuffles the cards by swapping two random cards 10,000 times
+    for (int x = 0; x < 10000; ++x)
+    {
+        // Get two random numbers between 0 and 51
+        int randomInt = rand() % 52;
+        int randomInt2 = rand() % 52;
+
+        // Swaps the two cards in the place of the two random numbers
+        Card temp = deck[randomInt];
+        deck[randomInt] = deck[randomInt2];
+        deck[randomInt2] = temp;
+    }
+
+    // This divides up the cards into the two decks
+    int temp = 0;
+    int x = 0;
+    while (temp <= 50)
+    {
+        playerOneDeck[x] = deck[temp];
+        playerTwoDeck[x] = deck[temp + 1];
+        temp += 2;
+        ++x;
+    }
+
+    // The remaining spots are filled with an empty card
+    Card emptyCard;
+    emptyCard.rank = None;
+    emptyCard.suit = Empty;
+    while (x <= 51)
+    {
+        playerOneDeck[x] = emptyCard;
+        playerTwoDeck[x] = emptyCard;
+        ++x;
+    }
+}
 
 void Deck::createCard(Card &sentCard, int x)
 {
+    // Giving the card the suit
     switch (x % 4){
         case 0 :
             sentCard.suit = Spades;
@@ -23,6 +74,7 @@ void Deck::createCard(Card &sentCard, int x)
             break;
     }
 
+    // Giving the card the rank
     switch (x % 13){
         case 0 :
             sentCard.rank = Ace;
@@ -65,268 +117,238 @@ void Deck::createCard(Card &sentCard, int x)
             break;
     }
 }
-    
-void Deck::fillDeck()
-{
-    Card card;
-    for (int x = 0; x < 52; ++x)
-    {
-        createCard(card, x);
-        deck[x] = card;
-    }
-}
 
-Deck::Deck()
+void Deck::printCard(Card &sentCard)
 {
-    fillDeck();
-}
+    // The string that will contain the name of the card
+    std::string cardName = "";
 
-void Deck::viewDeck()
-{
-    for (int x = 0; x < 52; ++x)
-    {
-        std::cout << printRank(deck[x]) << " of " << printSuit(deck[x]) << std::endl;
-    }
-}
-
-std::string Deck::printSuit(Card &sentCard)
-{
-    switch (sentCard.suit) {
-        case 1 :
-            return "Spades";
-        case 2 :
-            return "Clubs";
-        case 3 :
-            return "Hearts";
-        case 4 :
-            return "Diamonds";
-        case 0 :
-            return "Empty";
-    }
-}
-
-std::string Deck::printRank(Card &sentCard)
-{
+    // Getting the rank
     switch (sentCard.rank) {
         case 14 :
-            return "Ace";
+            cardName += "Ace";
+            break;
         case 2 :
-            return "Two";
+            cardName += "Two";
+            break;
         case 3 :
-            return "Three";
+            cardName += "Three";
+            break;
         case 4 :
-            return "Four";
+            cardName += "Four";
+            break;
         case 5 :
-            return "Five";
+            cardName += "Five";
+            break;
         case 6 :
-            return "Six";
+            cardName += "Six";
+            break;
         case 7 :
-            return "Seven";
+            cardName += "Seven";
+            break;
         case 8 :
-            return "Eight";
+            cardName += "Eight";
+            break;
         case 9 :
-            return "Nine";
+            cardName += "Nine";
+            break;
         case 10 :
-            return "Ten";
+            cardName += "Ten";
+            break;
         case 11 :
-            return "Jack";
+            cardName += "Jack";
+            break;
         case 12 :
-            return "Queen";
+            cardName += "Queen";
+            break;
         case 13 :
-            return "King";
+            cardName += "King";
+            break;
         case 0 :
-            return "None";
-        
+            cardName += "None";
+            break;
     }
+    
+    // Adding the spaces and 'of'
+    cardName += " of ";
+
+    // Adding the suit
+    switch (sentCard.suit) {
+        case 1 :
+            cardName += "Spades";
+            break;
+        case 2 :
+            cardName += "Clubs";
+            break;
+        case 3 :
+            cardName += "Hearts";
+            break;
+        case 4 :
+            cardName += "Diamonds";
+            break;
+        case 0 :
+            cardName += "Empty";
+            break;
+    }
+
+    // Printing out the name of the card
+    std::cout << cardName << std::endl;
 }
 
-void Deck::shuffle()
+void Deck::viewDecks()
 {
-    for (int x = 0; x < 10000; ++x)
-    {
-        int randomInt = rand() % 52;
-        int randomInt2 = rand() % 52;
-        swap(randomInt, randomInt2);
-    }
-}
-
-void Deck::swap(int firstSwap, int secondSwap)
-{
-    Card temp = deck[firstSwap];
-    deck[firstSwap] = deck[secondSwap];
-    deck[secondSwap] = temp;
-}
-
-void Deck::playWar()
-{
-    Card playerOneDeck[52];
-    Card playerTwoDeck[52];
-    //std::cout << playerOneDeck[0].rank << std::endl;
-
-    int temp = 0;
-    int x = 0;
-    while (temp <= 50)
-    {
-        //std::cout << "Temp: " << temp << std::endl << "x: " << x << std::endl;
-        playerOneDeck[x] = deck[temp];
-        playerTwoDeck[x] = deck[temp + 1];
-        //std::cout << printRank(playerOneDeck[x]) << " of " << printSuit(playerOneDeck[x]) << std::endl;
-        //std::cout << printRank(playerTwoDeck[x]) << " of " << printSuit(playerTwoDeck[x]) << std::endl;
-        temp += 2;
-        ++x;
-    }
-
-    Card emptyCard;
-    emptyCard.rank = None;
-    emptyCard.suit = Empty;
-    while (x <= 51)
-    {
-        playerOneDeck[x] = emptyCard;
-        playerTwoDeck[x] = emptyCard;
-        ++x;
-    }
-
-    /*
-    if (playerOneDeck[51].rank == 0)
-    {
-        std::cout << "Yes!" << std::endl;
-    }
-    */
-
-    //std::cout << std::endl;
-    //viewDeck();
-
-    /*
+    // Printing out player one's deck
+    std::cout << "\nPlayer One's Deck:" << std::endl;
     for (int x = 0; x < 52; ++x)
     {
-        std::cout << "Player One: " << printRank(playerOneDeck[x]) << " of " << printSuit(playerOneDeck[x]) << std::endl;
-        std::cout << "Player Two: " << printRank(playerTwoDeck[x]) << " of " << printSuit(playerTwoDeck[x]) << std::endl << std::endl;
-    }
-    */
-
-    while(playerOneDeck[0].rank != 0 && playerTwoDeck[0].rank != 0)
-    {
-        //std::cout << "HERE 1" <<  std::endl;
-        playCard(playerOneDeck, playerTwoDeck);
-    }
-}
-
-void Deck::playCard(Card oneDeck[], Card twoDeck[])
-{
-    Card warZone[52];
-    int x = 0;
-    warZone[x] = oneDeck[0];
-    warZone[x + 1] = twoDeck[0];
-
-    bool playerOneWinner = false;
-    if (warZone[x].rank > warZone[x + 1].rank)
-    {
-        //std::cout << "HERE 4" << std::endl;
-        playerOneWinner = true;
-    }
-    else if (warZone[x].rank == warZone[x + 1].rank)
-    {
-        int y = 0;
-        while(warZone[x].rank == warZone[x + 1].rank)
+        if (playerOneDeck[x].rank == 0)
         {
-            //std::cout << "HERE 2" << std::endl;
-            x += 2;
-            for (int z = 0; z < 3; ++z)
-            {
-                warZone[x] = oneDeck[y];
-                ++x;
-                warZone[x] = twoDeck[y];
-                ++x;
-                ++y;
-            }
-            x -= 2;
+            break;
         }
-        if (warZone[x].rank > warZone[x + 1].rank)
+        printCard(playerOneDeck[x]);
+    }
+
+    // Printing out player two's deck
+    std::cout << "\nPlayer Two's Deck:" << std::endl;
+    for (int x = 0; x < 52; ++x)
+    {
+        if (playerTwoDeck[x].rank == 0)
         {
-            playerOneWinner = true;
+            break;
         }
+        printCard(playerTwoDeck[x]);
     }
-
-    /*
-    std::cout << "HERE 5" << std::endl;
-    for (int xx = 0; xx < 52; ++xx)
-    {
-        std::cout << "War Zone: " << printRank(warZone[xx]) << " of " << printSuit(warZone[xx]) << std::endl;
-    }
-    */
-    x += 2;
-    //std::cout << "x: " << x << std::endl;
-    Card emptyCard;
-    emptyCard.rank = None;
-    emptyCard.suit = Empty;
-    while (x <= 51)
-    {
-        warZone[x] = emptyCard;
-        ++x;
-    }
-
-    cleanseWarZoneCards(oneDeck, twoDeck, warZone, playerOneWinner);
 }
 
-int Deck::findEndOfDeck(Card randomDeck[])
+bool Deck::getWinner()
 {
-    int place = 0;
-    while (randomDeck[place].rank != 0)
+    if (playerOneDeck[0].rank == 0 || playerTwoDeck[0].rank == 0)
     {
-        ++place;
+        return true;
     }
-    //std::cout << "Place: " << place << std::endl;
-    return place;
+    return false;
 }
 
-void Deck::cleanseWarZoneCards(Card playerOneDeck[], Card playerTwoDeck[], Card warZone[], bool playerOneWinner)
+void Deck::goToWar(int numOfCardsPassed)
 {
-    Card emptyCard;
-    emptyCard.rank = None;
-    emptyCard.suit = Empty;
-    int q = 0;
-    int endOfFirstDeck, endOfSecondDeck;
-
-    //std::cout << "War Zone (cleanse function): " << printRank(warZone[q]) << " of " << printSuit(warZone[q]) << std::endl;
-    //while (warZone[q].rank != 0 && warZone[q].rank == playerOneDeck[q].rank && warZone[q].suit == playerOneDeck[q].suit && warZone[q + 1].rank == playerTwoDeck[q].rank && warZone[q + 1].suit == playerTwoDeck[q].suit)
-    while (warZone[q].rank != 0 && warZone[q].suit != 0)
+    if (numOfCardsPassed > 51)
     {
-        //std::cout << "HERE 3" << std::endl;
+        numOfCardsPassed = 2;
+    }
 
-        if (playerOneWinner)
+    if (playerOneDeck[numOfCardsPassed].rank > playerTwoDeck[numOfCardsPassed].rank)
+    {
+        changeCards(1, numOfCardsPassed);
+    }
+    else if (playerOneDeck[numOfCardsPassed].rank < playerTwoDeck[numOfCardsPassed].rank)
+    {
+        changeCards(2, numOfCardsPassed);
+    }
+    else
+    {
+        goToWar(numOfCardsPassed + 3);
+    }
+}
+
+// The cardGetter is either 1 (player one) or 2 (player two)
+void Deck::changeCards(int cardGetter, int numOfCards)
+{
+    if (cardGetter == 1)
+    {
+        int endOfDeck = findEndOfDeck(1);
+        for (int x = 0; x < numOfCards; ++x)
         {
-            endOfFirstDeck = findEndOfDeck(playerOneDeck);
-            playerOneDeck[endOfFirstDeck] = warZone[q];
-            playerOneDeck[endOfFirstDeck + 1] = warZone[q + 1];
-            playerOneDeck[0] = emptyCard;
-            playerTwoDeck[0] = emptyCard;
+            playerOneDeck[endOfDeck] = playerTwoDeck[x];
+            playerTwoDeck[x].rank = None;
+            playerTwoDeck[x].suit = Empty;
+        }
+        shiftDeck(2);
+    }
+
+    if (cardGetter == 2)
+    {
+        int endOfDeck = findEndOfDeck(2);
+        for (int x = 0; x < numOfCards; ++x)
+        {
+            playerTwoDeck[endOfDeck] = playerOneDeck[x];
+            playerOneDeck[x].rank = None;
+            playerOneDeck[x].suit = Empty;
+        }
+        shiftDeck(1);
+    }
+}
+
+void Deck::printWinner()
+{
+    if (getWinner())
+    {
+        if (playerOneDeck[0].rank == 0)
+        {
+            std::cout << "Player 2 is the winner!" << std::endl;
         }
         else
         {
-            endOfSecondDeck = findEndOfDeck(playerTwoDeck);
-            playerTwoDeck[endOfSecondDeck] = warZone[q];
-            playerTwoDeck[endOfSecondDeck + 1] = warZone[q + 1];
-            playerOneDeck[0] = emptyCard;
-            playerTwoDeck[0] = emptyCard;
+            std::cout << "Player 1 is the winner!" << std::endl;
         }
-        //std::cout << "HERE 3b" << std::endl;
-        q += 2;
-        shiftDeckOver(playerOneDeck);
-        shiftDeckOver(playerTwoDeck);
     }
 }
 
-void Deck::shiftDeckOver(Card aDeck[])
+// The deckShifter is either 1 (player one) or 2 (player two)
+void Deck::shiftDeck(int deckShifter)
 {
-    while (aDeck[0].rank == 0)
+    if (deckShifter == 1)
     {
-        for (int x = 0; x < 50; ++x)
+        int stopper = 0;
+        while (playerOneDeck[0].rank == 0 && stopper < 52)
         {
-            aDeck[x] = aDeck[x + 1];
+            for (int x = 0; x < 50; ++x)
+            {
+                playerOneDeck[x] = playerOneDeck[x + 1];
+            }
+            ++stopper;
+            playerOneDeck[51].rank = None;
+            playerOneDeck[51].suit = Empty;
         }
     }
-    Card emptyCard;
-    emptyCard.rank = None;
-    emptyCard.suit = Empty;
-    aDeck[51] = emptyCard;
+
+    if (deckShifter == 2)
+    {
+        int stopper = 0;
+        while (playerTwoDeck[0].rank == 0 && stopper < 52)
+        {
+            for (int x = 0; x < 50; ++x)
+            {
+                playerTwoDeck[x] = playerTwoDeck[x + 1];
+            }
+            ++stopper;
+            playerTwoDeck[51].rank = None;
+            playerTwoDeck[51].suit = Empty;
+        }
+    }
+}
+
+// The deckNum is either 1 (player one) or 2 (player two)
+int Deck::findEndOfDeck(int deckNum)
+{
+    int place = 0;
+    
+    // This is for player one
+    if (deckNum == 1)
+    {
+        while (playerOneDeck[place].rank != 0)
+        {
+            ++place;
+        }
+    }
+
+    // This is for player two
+    else
+    {
+        while (playerTwoDeck[place].rank != 0)
+        {
+            ++place;
+        }
+    }
+
+    return place;
 }
