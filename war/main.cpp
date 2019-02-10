@@ -2,21 +2,15 @@
 // Devin Hopkins
 // 4190350
 
-#include "deck.hpp"
+#include "game.hpp"
 
 int main(int argc, char const *argv[])
 {
-    // Creating the deck object and filling it
-    Deck war;
+    // Creating the game object
+    War warGame{};
 
     // Playing the game of war
-    while(!(war.getWinner()))
-    {
-        war.goToWar(1);
-    }
-
-    // Printing the winner
-    war.printWinner();
+    warGame.playWar();
 
     return 0;
 }

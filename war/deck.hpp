@@ -2,37 +2,28 @@
 // Devin Hopkins
 // 4190350
 
-#include <iostream>
-#include "classifications.cpp"
+#include <vector>
+#include "card.hpp"
 
 class Deck{
 
 private:
 
-    Card playerOneDeck[52], playerTwoDeck[52];
-
-    void createCard(Card &sentCard, int x);
-    
-    void fillDecks();
-
-    void printCard(Card &sentCard);
-
-    void changeCards(int cardGetter, int numOfCards);
-
-    int findEndOfDeck(int deckNum);
-
-    void shiftDeck(int deckShifter);
+    // The vector of deck of cards
+    std::vector<Card> deck;
 
 public:
 
     Deck();
 
-    void viewDecks();
+    void addCard(Card& card);
 
-    bool getWinner();
+    void viewDeck();
 
-    void printWinner();
+    Card get(int x);
 
-    void goToWar(int numOfCardsPassed);
+    int getSize();
+
+    void transferCardsTo(Deck &otherDeck, int numOfCards);
 
 };
