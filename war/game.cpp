@@ -34,12 +34,27 @@ War::War()
         tempData <<= 4;
     }
 
+    // Creating two jokers
+    tempData = 0;
+    tempData >>= 6;
+    tempData += 1;
+    tempData <<= 6;
+    for (int x = 0; x < 2; ++x)
+    {
+        Card card{tempData};
+        fullDeck.push_back(card);
+        tempData >>= 6;
+        tempData += 1;
+        tempData <<= 6;
+    }
+
     // Setting up the random number generator and shuffling
     srand(time(0));
+    int deckSize = fullDeck.size();
     for (int t = 0; t < 10000; ++t)
     {
         // Making the random number
-        int randOne = rand() % 52;
+        int randOne = rand() % deckSize;
 
         // Taking the card out of the deck, putting it into tempCard, and then putting
         // it back into the end of the vector, effectively shuffling it
@@ -57,6 +72,14 @@ War::War()
         playerTwoDeck.addCard(fullDeck[z + 1]);
         z += 2;
     }
+
+    // Viewing the deck
+    std::cout << "\nEach player's deck.\n";
+    std::cout << "Player 1:\n";
+    playerOneDeck.viewDeck();
+    std::cout << "\nPlayer 2:\n";
+    playerTwoDeck.viewDeck();
+    std::cout << "\n\n";
 }
 
 void War::playWar()
@@ -82,6 +105,11 @@ void War::playWar()
             // The last of the two cards to be flipped out is compared with the other
             while (playerOneDeck.get(numOfFlips) == playerTwoDeck.get(numOfFlips))
             {
+                // Displaying to the user what is happening
+                std::cout << "Player One's Card: " << playerOneDeck.get(numOfFlips) << std::endl;
+                std::cout << "Player Two's Card: " << playerTwoDeck.get(numOfFlips) << std::endl;
+                std::cout << "This means war!\n\n";
+
                 // Two more cards are flipped out
                 numOfFlips += 2;
             }
