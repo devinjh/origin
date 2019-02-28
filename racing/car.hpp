@@ -5,8 +5,6 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
-//using namespace sf;
-
 class Car {
     private:
         const int num = 8; // checkpoints

@@ -1,3 +1,7 @@
+// The main.cpp file for the racing game
+// Devin Hopkins
+// 4190350
+
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
@@ -96,7 +100,7 @@ int main()
             Left = 1;
         }
         
-        // This is for changing the user's car speed and movement
+        // This section is for changing the user's car speed
         //
         // If the up arow key has been pressed and the speed of the car is less than
         // the max speed in the forward direction, then the car's speed in the forward
@@ -136,56 +140,121 @@ int main()
             }
         }
         
+        // If neither the up or down arrow keys are being pressed, the car will slow down
+        // until it comes to a complete stop
         if (!Up && !Down)
-        if (speed - dec > 0) speed -= dec;
-        else if (speed + dec < 0) speed += dec;
-        else speed = 0;
-
-    if (Right && speed != 0)  angle += turnSpeed * speed / maxSpeed;
-    if (Left && speed != 0)   angle -= turnSpeed * speed / maxSpeed;
-
-    car[0].speed = speed;
-    car[0].angle = angle;
-
-	for(int i = 0; i < N; i++) car[i].move();
-	for(int i = 1; i < N; i++) car[i].findTarget();
-
-    //collision
-    for(int i = 0; i < N; i++)
-    for(int j = 0; j < N; j++)
-    {      
-		int dx = 0, dy = 0;
-        while (dx * dx + dy * dy < 4 * R * R)
-         {
-           car[i].x += dx / 10.0;
-           car[i].x += dy / 10.0;
-           car[j].x -= dx / 10.0;
-           car[j].y -= dy / 10.0;
-		   dx = car[i].x - car[j].x;
-           dy = car[i].y - car[j].y;
-		   if (!dx && !dy) break;
-         }
-    }
-
-    app.clear(Color::White);
-
-    if (car[0].x > 320) offsetX = car[0].x - 320;
-    if (car[0].y > 240) offsetY = car[0].y - 240;
-
-    sBackground.setPosition(-offsetX, -offsetY);
-    app.draw(sBackground);
-
-    Color colors[10] = {Color::Red, Color::Green, Color::Magenta, Color::Blue, Color::White};
-
-    for(int i = 0; i < N; i++)
-    {
-      sCar.setPosition(car[i].x - offsetX, car[i].y - offsetY);
-      sCar.setRotation(car[i].angle * 180 / 3.141593);
-      sCar.setColor(colors[i]);
-      app.draw(sCar);
-    }
-
-    app.display();
+        {
+            // If the car is moving in the forward direction
+            if (speed - dec > 0)
+            {
+                speed -= dec;
+            }
+            // If the car is moving in the reverse direction
+            else if (speed + dec < 0)
+            {
+                speed += dec;
+            }
+            // If the car is pretty muched stopped or is stopped, then the car is set/kept
+            // at a standstill
+            else
+            {
+                speed = 0;
+            }
+        }
+        
+        // This section is for changing the user's car's angle
+        //
+        // If the right arrow key is pressed and the car is moving, the car turns towards the
+        // right at a rate relative to its speed
+        if (Right && speed != 0) 
+        {
+            angle += (turnSpeed * speed) / maxSpeed;
+        }
+        // If the left arrow key is pressed and the car is moving, the car turns towards the
+        // left at a rate relative to its speed
+        if (Left && speed != 0)
+        {
+            angle -= (turnSpeed * speed) / maxSpeed;
+        }
+        
+        // This is updating the user's car's variables
+        car[0].speed = speed;
+        car[0].angle = angle;
+        
+        // This is performing the actual moving of every single car
+        for(int i = 0; i < N; i++)
+        {
+            car[i].move();
+        }
+        
+        // This is telling the computer cars where their next target is and how they need to
+        // adjust to get there
+        for(int i = 1; i < N; i++)
+        {
+            car[i].findTarget();
+        }
+        
+        // This section is for collision
+        //
+        // Look into
+        for(int i = 0; i < N; i++)
+        {
+            for(int j = 0; j < N; j++)
+            {      
+                int dx = 0;
+                int dy = 0;
+                while (dx * dx + dy * dy < 4 * R * R)
+                {
+                    car[i].x += dy / 10.0;
+                    car[i].x += dx / 10.0;
+                    car[j].x -= dx / 10.0;
+                    car[j].y -= dy / 10.0;
+                    dx = car[i].x - car[j].x;
+                    dy = car[i].y - car[j].y;
+                    if (!dx && !dy)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Look into
+        app.clear(Color::White);
+        
+        // If the user's car goes to far from the left edge, then the screen must move to keep up with
+        // the user's car. This gets the x coordinate of where the center of the screen should be
+        if (car[0].x > 320)
+        {
+            offsetX = car[0].x - 320;
+        }
+        // If the user's car goes too far from the top edge, then the screen must move to keep up
+        // with the user's car. This gets the y coordinate of where the center of the screen should
+        // be
+        if (car[0].y > 240)
+        {
+            offsetY = car[0].y - 240;
+        }
+        
+        // This changes where the screen is so the user's car stays in the middle, so long as
+        // the user isn't near the left or top edge by using the values obtained above
+        sBackground.setPosition(-offsetX, -offsetY);
+        app.draw(sBackground);
+        
+        // These are the colors of the car
+        Color colors[10] = {Color::Red, Color::Green, Color::Magenta, Color::Blue, Color::White};
+        
+        // After setting up the car variables, this draws each car in their correct location
+        for(int i = 0; i < N; i++)
+        {
+            sCar.setPosition(car[i].x - offsetX, car[i].y - offsetY);
+            sCar.setRotation(car[i].angle * 180 / 3.141593);
+            sCar.setColor(colors[i]);
+            app.draw(sCar);
+        }
+        
+        // Look into
+        app.display();
     }
 
     return 0;
