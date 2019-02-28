@@ -3,17 +3,28 @@
 // 4190350
 
 #include "car.hpp"
-#include <iostream>
 
 Car::Car()
 {
+    // Setting all the variables to a something
     speed = 2;
     angle = 0;
     n = 0;
     x = 0;
     y = 0;
+}
 
-    // private data members
+void Car::move()
+{
+    // Adjusting how fast and what angle the car is moving
+    x += sin(angle) * speed;
+    y -= cos(angle) * speed;
+}
+
+// This function tells the CPU cars where to go
+void Car::findTarget()
+{
+    // Declaring the car's checkpoints
     int points[num][2] = {300, 610,
         1270,430,
         1380,2380,
@@ -22,70 +33,38 @@ Car::Car()
         2550,1680,
         2560,3150,
         500, 3300};
-    /*
-    int points[num][2];
-    points[0][0] = 300;
-    points[0][1] = 610;
-    */
 
-    std::cout << "HERE abcxyz" << std::endl;
-
-    for (int xx = 0; xx < num; ++xx)
-    {
-        for (int yy = 0; yy < 2; ++yy)
-        {
-            std::cout << "[" << xx << "][" << yy << "]: " << points[xx][yy] << std::endl;
-        }
-    }
-
-    std::cout << "n:" << n << std::endl;
-}
-
-void Car::move()
-{
-    x += sin(angle) * speed;
-    y -= cos(angle) * speed;
-}
-
-// This function tells the CPU cars where to go
-void Car::findTarget()
-{
-    std::cout << "HERE xyz1" << std::endl;
-    std::cout << "num:" << num << std::endl;
-    std::cout << "n:" << n << std::endl;
-
-    for (int xx = 0; xx < num; ++xx)
-    {
-        for (int yy = 0; yy < 2; ++yy)
-        {
-            std::cout << "[" << xx << "][" << yy << "]: " << points[xx][yy] << std::endl;
-        }
-    }
-
-    std::cout << "n:" << n << std::endl;
+    // Getting the correct checkpoint
     float tx = points[n][0];
-    std::cout << "HERE xyz1b" << std::endl;
     float ty = points[n][1];
-    std::cout << "HERE xyz1c" << std::endl;
+
+    // For atan2():
+    // This function returns the angle on the unit circle (starting at 0) form the position (x, y)
+    // in which x and y are sent in via the function call
+    //
+    // For beta = angle - atan2():
+    // This gets the difference in the angle between the car's current angle and the angle it needs
+    // to be heading to hit its next checkpoint. Beta holds this variable
     float beta = angle - atan2(tx - x, -ty + y);
 
-    std::cout << "HERE xyz2" << std::endl;
-
+    // If the sin of beta is negative, that means the angle the car needs to be heading is greater
+    // than the angle the car is currently heading. So, the angle is increased and the speed is set
+    // to the car's proper speed
     if (sin(beta) < 0)
     {
         angle += 0.005 * speed;
     }
+    // If the sin of beta is positive, the oposite is true and thus the opposite needs to happen
     else
     {
         angle -= 0.005 * speed;
     }
 
-    std::cout << "HERE xyz3" << std::endl;
-
+    // If the cars are within 625 pixels (both x and y distance sqaured combined), then the next
+    // checkpoint is accesed by increasing n by 1. It's also made sure that n isn't increased
+    // more than what the number of checkpoints is
     if ((x - tx) * (x - tx) + (y - ty) * (y - ty) < 25 * 25)
     {
         n = (n + 1) % num;
     }
-
-    std::cout << "HERE xyz4" << std::endl;
 }
