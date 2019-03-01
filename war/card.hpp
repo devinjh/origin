@@ -4,15 +4,16 @@
 
 #include <iostream>
 
-enum Suit {
-    // The suits of a card
-    Diamonds,
-    Clubs,
-    Hearts,
-    Spades,
-};
+class Card{
 
-enum Rank {
+private:
+
+    // The 8 bit data needed for each card
+    unsigned char dataForCard;
+
+public:
+
+    enum Rank {
     // The ranks of a card
     Two,
     Three,
@@ -27,17 +28,15 @@ enum Rank {
     Queen,
     King,
     Ace,
-};
+    };
 
-class Card{
-
-private:
-
-    // The 8 bit data needed for each card (although only 6 bits
-    // will be used)
-    unsigned char dataForCard;
-
-public:
+    enum Suit {
+    // The suits of a card
+    Diamonds,
+    Clubs,
+    Hearts,
+    Spades,
+    };
 
     Card(unsigned char incomingData);
 
@@ -49,8 +48,8 @@ public:
 
 // OS operator overloaders
 std::ostream& operator<<(std::ostream& os, Card c);
-std::ostream& operator<<(std::ostream& os, Suit s);
-std::ostream& operator<<(std::ostream& os, Rank r);
+std::ostream& operator<<(std::ostream& os, Card::Suit s);
+std::ostream& operator<<(std::ostream& os, Card::Rank r);
 
 // Comparative overloaders
 bool operator==(Card a, Card b);
