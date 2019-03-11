@@ -1,51 +1,20 @@
-// This is the card hpp file for the War game.
+// This is the card.hpp file for the War game
 // Devin Hopkins
 // 4190350
 
-#include <iostream>
+//#include <iostream>
 
 class Card{
 
-private:
-
-    // The 8 bit data needed for each card
-    unsigned char dataForCard;
-
 public:
 
-    enum Rank {
-    // The ranks of a card
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
-    Ten,
-    Jack,
-    Queen,
-    King,
-    Ace,
-    };
+    virtual unsigned char getData() = 0;
 
-    enum Suit {
-    // The suits of a card
-    Diamonds,
-    Clubs,
-    Hearts,
-    Spades,
-    };
-
-    Card(unsigned char incomingData);
-
-    unsigned char getData();
-
-    int getRank();
+    virtual int getType() = 0;
 
 };
 
+/*
 // OS operator overloaders
 std::ostream& operator<<(std::ostream& os, Card c);
 std::ostream& operator<<(std::ostream& os, Card::Suit s);
@@ -58,3 +27,4 @@ bool operator<(Card a, Card b);
 bool operator>(Card a, Card b);
 bool operator<=(Card a, Card b);
 bool operator>=(Card a, Card b);
+*/

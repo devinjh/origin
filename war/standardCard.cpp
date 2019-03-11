@@ -1,25 +1,19 @@
-// This is the card.cpp file for the War game
+// This is the standardCard.cpp file for the War game
 // Devin Hopkins
 // 4190350
 
-#include "card.hpp"
-
-// The if statement to see if a card is a joker or not (true if yes)
-// if ((((c.getData() >> 6) & 0x1) == 1) || ((((c.getData() >> 6) & 0x1) == 0) && ((c.getData() >> 7) & 0x1) == 1))
-
-Card::Card(unsigned char incomingData)
+StandardCard::StandardCard(unsigned char incomingData)
 {
-    dataForCard = incomingData;
+    dataForStandardCard = incomingData;
 }
 
-unsigned char Card::getData()
+unsigned char StandardCard::getData()
 {
-    // returns the card's unsigned char data
-    return dataForCard;
+    // Returns the card's unsigned char data
+    return dataForStandardCard;
 }
 
-/*
-std::ostream& operator<<(std::ostream& os, Card c)
+std::ostream& operator<<(std::ostream& os, StandardCard c)
 {
     // Detects to see if the card is a black joker or not
     if (((c.getData() >> 6) & 0x1) == 1)
@@ -36,39 +30,39 @@ std::ostream& operator<<(std::ostream& os, Card c)
     return os << static_cast<Card::Rank>(os, c.getData() & 0xf) << static_cast<Card::Suit>(os, c.getData() >> 4);
 }
 
-std::ostream& operator<<(std::ostream& os, Card::Suit s)
+std::ostream& operator<<(std::ostream& os, StandardCard::Suit s)
 {
     // Displays the appropriate suit when given a suit
     switch (s) {
-        case Card::Clubs: return os << "C";
-        case Card::Spades: return os << "S";
-        case Card::Hearts: return os << "H";
-        case Card::Diamonds: return os << "D";
+        case StandardCard::Clubs: return os << "C";
+        case StandardCard::Spades: return os << "S";
+        case StandardCard::Hearts: return os << "H";
+        case StandardCard::Diamonds: return os << "D";
     }
 }
 
-std::ostream& operator<<(std::ostream& os, Card::Rank r)
+std::ostream& operator<<(std::ostream& os, StandardCard::Rank r)
 {
     // Displays the appropriate rank when given a rank
     switch (r) {
-        case Card::Ace: return os << "A";
-        case Card::Two: return os << "2";
-        case Card::Three: return os << "3";
-        case Card::Four: return os << "4";
-        case Card::Five: return os << "5";
-        case Card::Six: return os << "6";
-        case Card::Seven: return os << "7";
-        case Card::Eight: return os << "8";
-        case Card::Nine: return os << "9";
-        case Card::Ten: return os << "T";
-        case Card::Jack: return os << "J";
-        case Card::Queen: return os << "Q";
-        case Card::King: return os << "K";
+        case StandardCard::Ace: return os << "A";
+        case StandardCard::Two: return os << "2";
+        case StandardCard::Three: return os << "3";
+        case StandardCard::Four: return os << "4";
+        case StandardCard::Five: return os << "5";
+        case StandardCard::Six: return os << "6";
+        case StandardCard::Seven: return os << "7";
+        case StandardCard::Eight: return os << "8";
+        case StandardCard::Nine: return os << "9";
+        case StandardCard::Ten: return os << "T";
+        case StandardCard::Jack: return os << "J";
+        case StandardCard::Queen: return os << "Q";
+        case StandardCard::King: return os << "K";
     }
 }
 
 // Compared by each card's rank
-bool operator==(Card a, Card b)
+bool operator==(StandardCard a, StandardCard b)
 {
     // Card a is a joker
     if ((((a.getData() >> 6) & 0x1) == 1) || ((((a.getData() >> 6) & 0x1) == 0) && ((a.getData() >> 7) & 0x1) == 1))
@@ -94,13 +88,13 @@ bool operator==(Card a, Card b)
 }
 
 // Compared by each card's rank
-bool operator!=(Card a, Card b)
+bool operator!=(StandardCard a, StandardCard b)
 {
     return !(a == b);
 }
 
 // Compared by each card's rank
-bool operator<(Card a, Card b)
+bool operator<(StandardCard a, StandardCard b)
 {
     // Card a is a joker
     if ((((a.getData() >> 6) & 0x1) == 1) || ((((a.getData() >> 6) & 0x1) == 0) && ((a.getData() >> 7) & 0x1) == 1))
@@ -120,20 +114,19 @@ bool operator<(Card a, Card b)
 }
 
 // Compared by each card's rank
-bool operator>(Card a, Card b)
+bool operator>(StandardCard a, StandardCard b)
 {
     return (b < a);
 }
 
 // Compared by each card's rank
-bool operator<=(Card a, Card b)
+bool operator<=(StandardCard a, StandardCard b)
 {
     return !(b < a);
 }
 
 // Compared by each card's rank
-bool operator>=(Card a, Card b)
+bool operator>=(StandardCard a, StandardCard b)
 {
     return !(a < b);
 }
-*/
