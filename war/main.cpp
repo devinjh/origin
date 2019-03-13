@@ -1,4 +1,4 @@
-// This is the main file for the War game.
+// This is the main.cpp file for the War game
 // Devin Hopkins
 // 4190350
 
@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     War warGame{};
 
     // Playing the game of war
-    warGame.playWar();
+    //warGame.playWar();
 
     return 0;
 }

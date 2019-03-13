@@ -1,4 +1,4 @@
-// This is the game file for the War game.
+// This is the game.cpp file for the War game
 // Devin Hopkins
 // 4190350
 
@@ -7,7 +7,7 @@
 War::War()
 {
     // Creates an extra vector to create all of the cards
-    std::vector<Card> fullDeck;
+    std::vector<Card*> fullDeck;
     unsigned char tempData = 0;
 
     // Creates 52 individual cards and puts them into the full deck (in order)
@@ -15,9 +15,8 @@ War::War()
     {
         for (int y = 0; y < 13; ++y)
         {
-            // Creating the card and putting it into the full deck vector
-            Card card{tempData};
-            fullDeck.push_back(card);
+            // Creating the standard card and putting it into the full deck vector
+            fullDeck.push_back(new StandardCard(tempData));
 
             // This makes the unsigned char increase by one so the next card's
             // rank is one more
@@ -41,8 +40,7 @@ War::War()
     tempData <<= 6;
     for (int x = 0; x < 2; ++x)
     {
-        Card card{tempData};
-        fullDeck.push_back(card);
+        fullDeck.push_back(new JokerCard(tempData));
         tempData >>= 6;
         tempData += 1;
         tempData <<= 6;
@@ -58,9 +56,13 @@ War::War()
 
         // Taking the card out of the deck, putting it into tempCard, and then putting
         // it back into the end of the vector, effectively shuffling it
+        fullDeck.push_back(fullDeck[randOne]);
+        fullDeck.erase(fullDeck.begin() + randOne);
+        /*
         Card tempCard = fullDeck[randOne];
         fullDeck.erase(fullDeck.begin() + randOne);
         fullDeck.push_back(tempCard);
+        */
     }
 
     // Putting the cards into the decks of the players
@@ -81,7 +83,7 @@ War::War()
     playerTwoDeck.viewDeck();
     std::cout << "\n\n";
 }
-
+/*
 void War::playWar()
 {
     // This continously checks to see if either player is out of cards
@@ -91,23 +93,27 @@ void War::playWar()
         // Resetting the number of cards flipped to zero
         int numOfFlips = 0;
 
+        std::cout << "HERE" << std::endl;
+        std::cout << "Card: " << playerOneDeck.get(0) << std::endl;
+
         // Checks to see if each player's first card is equal or not
-        if (playerOneDeck.get(numOfFlips) == playerTwoDeck.get(numOfFlips))
+        if (*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips))
         {
+            std::cout << "HERE2" << std::endl;
             // Displaying to the user what is happening
-            std::cout << "Player One's Card: " << playerOneDeck.get(numOfFlips) << std::endl;
-            std::cout << "Player Two's Card: " << playerTwoDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
             std::cout << "This means war!\n\n";
 
             // Two more cards are flipped out
             numOfFlips += 2;
 
             // The last of the two cards to be flipped out is compared with the other
-            while (playerOneDeck.get(numOfFlips) == playerTwoDeck.get(numOfFlips))
+            while (*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips))
             {
                 // Displaying to the user what is happening
-                std::cout << "Player One's Card: " << playerOneDeck.get(numOfFlips) << std::endl;
-                std::cout << "Player Two's Card: " << playerTwoDeck.get(numOfFlips) << std::endl;
+                std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
+                std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
                 std::cout << "This means war!\n\n";
 
                 // Two more cards are flipped out
@@ -115,12 +121,14 @@ void War::playWar()
             }
         }
 
+        std::cout << "HERE3" << std::endl;
+
         // Now that a victor has been determined, cards are transfered from one deck to another
-        if (playerOneDeck.get(numOfFlips) < playerTwoDeck.get(numOfFlips))
+        if (*playerOneDeck.get(numOfFlips) < *playerTwoDeck.get(numOfFlips))
         {
             // Displaying to the user what is happening
-            std::cout << "Player One's Card: " << playerOneDeck.get(numOfFlips) << std::endl;
-            std::cout << "Player Two's Card: " << playerTwoDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
             std::cout << "This means Player Two gets " << (numOfFlips + 1) << " cards from Player One!\n\n";
 
             // Transferring the appropriate number of cards to player two from player one
@@ -129,8 +137,8 @@ void War::playWar()
         else
         {
             // Displaying to the user what is happening
-            std::cout << "Player One's Card: " << playerOneDeck.get(numOfFlips) << std::endl;
-            std::cout << "Player Two's Card: " << playerTwoDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
+            std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
             std::cout << "This means Player One gets " << (numOfFlips + 1) << " cards from Player Two!\n\n";
 
             // Transferring the appropriate number of cards to player two from player one
@@ -147,4 +155,4 @@ void War::playWar()
     {
         std::cout << "Player 1 wins!" << std::endl;
     }
-}
+}*/

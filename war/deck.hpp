@@ -1,4 +1,4 @@
-// This is the deck hpp file for the War game.
+// This is the deck.hpp file for the War game
 // Devin Hopkins
 // 4190350
 
@@ -10,20 +10,20 @@ class Deck{
 private:
 
     // The vector of deck of cards
-    std::vector<Card> deck;
+    std::vector<Card*> deck;
 
 public:
 
     Deck();
 
-    void addCard(Card& card);
+    void addCard(Card* card);
 
     void viewDeck();
 
-    Card get(int x);
+    Card* get(int x);
 
     int getSize();
 
-    void transferCardsTo(Deck &otherDeck, int numOfCards);
+    void transferCardsTo(Deck& otherDeck, int numOfCards);
 
 };

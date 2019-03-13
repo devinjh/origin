@@ -1,4 +1,4 @@
-// This is the deck file for the War game.
+// This is the deck.cpp file for the War game
 // Devin Hopkins
 // 4190350
 
@@ -11,13 +11,13 @@ Deck::Deck()
     // Empty, don't need/want anything in here
 }
 
-void Deck::addCard(Card& card)
+void Deck::addCard(Card* ccard)
 {
-    // Adding a card to the end of th deck
-    deck.push_back(card);
+    // Adding a card to the end of the deck
+    deck.push_back(ccard);
 }
 
-Card Deck::get(int x)
+Card* Deck::get(int x)
 {
     // Returning the card at the spot given by x
     return deck[x];
@@ -57,18 +57,17 @@ void Deck::viewDeck()
     for (int y = 0; y < deck.size(); ++y)
     {
         split = ((deck.size() % 2) == 1) ? (deck.size() / 2) + 1 : deck.size() / 2;
-        //if ((deck.size() % 2) == 1) ? split = (deck.size() / 2) + 1 : split = deck.size() / 2;
         if ((y + 1) % split == 0)
         {
-            // If this is the last cards in the deck, goes to
+            // If this is the last card in the deck, goes to
             // a new line for the next card (makes it look nice)
-            std::cout << deck[y] << std::endl;
+            std::cout << *(deck[y]) << std::endl;
         }
         else
         {
             // Prints out the card with a space after it so
             // the display doesn't get confusing
-            std::cout << deck[y] << " ";
+            std::cout << *(deck[y]) << " ";
         }
     }
 

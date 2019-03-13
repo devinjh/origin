@@ -4,21 +4,69 @@
 
 #include "card.hpp"
 
+std::ostream& operator<<(std::ostream& os, StandardCard const& c)
+{
+    return os << static_cast<Rank>(os, c.getData() & 0xf) << static_cast<Suit>(os, c.getData() >> 4);
+    //return os << "Standard" << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, Suit s)
+{
+    // Displays the appropriate suit when given a suit
+    switch (s) {
+        case Clubs: return os << "C";
+        case Spades: return os << "S";
+        case Hearts: return os << "H";
+        case Diamonds: return os << "D";
+    }
+}
+
+std::ostream& operator<<(std::ostream& os, Rank r)
+{
+    // Displays the appropriate rank when given a rank
+    switch (r) {
+        case Ace: return os << "A";
+        case Two: return os << "2";
+        case Three: return os << "3";
+        case Four: return os << "4";
+        case Five: return os << "5";
+        case Six: return os << "6";
+        case Seven: return os << "7";
+        case Eight: return os << "8";
+        case Nine: return os << "9";
+        case Ten: return os << "T";
+        case Jack: return os << "J";
+        case Queen: return os << "Q";
+        case King: return os << "K";
+    }
+}
+
+std::ostream& operator<<(std::ostream& os, JokerCard const& c)
+{
+    return os << "Joker" << std::endl;
+}
+
+void StandardCard::print(std::ostream& os) const
+{
+    os << *this;
+}
+
+void JokerCard::print(std::ostream& os) const
+{
+    os << *this;
+}
+
+std::ostream& operator<<(std::ostream& os, Card const& c)
+{
+    c.print(os);
+    return os;
+}
+
 // The if statement to see if a card is a joker or not (true if yes)
 // if ((((c.getData() >> 6) & 0x1) == 1) || ((((c.getData() >> 6) & 0x1) == 0) && ((c.getData() >> 7) & 0x1) == 1))
 
-Card::Card(unsigned char incomingData)
-{
-    dataForCard = incomingData;
-}
-
-unsigned char Card::getData()
-{
-    // returns the card's unsigned char data
-    return dataForCard;
-}
-
 /*
+
 std::ostream& operator<<(std::ostream& os, Card c)
 {
     // Detects to see if the card is a black joker or not
@@ -36,36 +84,7 @@ std::ostream& operator<<(std::ostream& os, Card c)
     return os << static_cast<Card::Rank>(os, c.getData() & 0xf) << static_cast<Card::Suit>(os, c.getData() >> 4);
 }
 
-std::ostream& operator<<(std::ostream& os, Card::Suit s)
-{
-    // Displays the appropriate suit when given a suit
-    switch (s) {
-        case Card::Clubs: return os << "C";
-        case Card::Spades: return os << "S";
-        case Card::Hearts: return os << "H";
-        case Card::Diamonds: return os << "D";
-    }
-}
 
-std::ostream& operator<<(std::ostream& os, Card::Rank r)
-{
-    // Displays the appropriate rank when given a rank
-    switch (r) {
-        case Card::Ace: return os << "A";
-        case Card::Two: return os << "2";
-        case Card::Three: return os << "3";
-        case Card::Four: return os << "4";
-        case Card::Five: return os << "5";
-        case Card::Six: return os << "6";
-        case Card::Seven: return os << "7";
-        case Card::Eight: return os << "8";
-        case Card::Nine: return os << "9";
-        case Card::Ten: return os << "T";
-        case Card::Jack: return os << "J";
-        case Card::Queen: return os << "Q";
-        case Card::King: return os << "K";
-    }
-}
 
 // Compared by each card's rank
 bool operator==(Card a, Card b)
@@ -137,3 +156,64 @@ bool operator>=(Card a, Card b)
     return !(a < b);
 }
 */
+
+/*std::ostream& operator<<(std::ostream& os)
+{
+    std::string type = typeid(this).name();
+    os << type;
+    return os;
+}*/
+/*
+std::ostream& operator<<(std::ostream& os, Card& c)
+{
+    std::string type = typeid(c).name();
+    os << "Type: " << type << "\n";
+    return os;
+}*/
+
+/*
+std::ostream& Card::print(std::ostream& os)
+{
+    //std::string type = typeid(c).name();
+    //os << "       typeid(c): " << typeid(c) << std::endl;
+    os << "HERE2!" << std::endl;
+    return os << "typeid(this).name(): " << typeid(this).name() << std::endl;
+}
+
+std::ostream& operator<<(std::ostream& os, Card* c)
+{
+    //std::string type = typeid(c).name();
+    //os << "       typeid(c): " << typeid(c) << std::endl;
+    os << "HERE!" << std::endl;
+    return c->print(os);
+    //return os;
+}
+*/
+/*
+#include "card.hpp"
+
+struct StandardCard : Card {
+    //unsigned char data;
+    void setData(unsigned char incomingData)
+    {
+        data = incomingData;
+    }
+
+    unsigned char getData()
+    {
+        return 0;
+    }
+};
+
+struct JokerCard : Card {
+    //unsigned char data;
+    void setData(unsigned char incomingData)
+    {
+        data = incomingData;
+    }
+
+    unsigned char getData()
+    {
+        return 0;
+    }
+};*/

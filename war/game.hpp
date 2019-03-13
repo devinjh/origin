@@ -1,8 +1,11 @@
-// This is the deck hpp file for the War game.
+// This is the deck.hpp file for the War game
 // Devin Hopkins
 // 4190350
 
 #include "deck.hpp"
+#include "card.hpp"
+//#include "standardCard.hpp"
+//#include "jokerCard.hpp"
 
 class War{
 
@@ -16,6 +19,6 @@ public:
 
     War();
 
-    void playWar();
+    //void playWar();
 
 };
