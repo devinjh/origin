@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
     War warGame{};
 
     // Playing the game of war
-    //warGame.playWar();
+    warGame.playWar();
 
     return 0;
 }

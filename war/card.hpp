@@ -36,9 +36,11 @@ enum Color {
 };
 
 struct Card {
-    virtual unsigned char getData() = 0;
+    virtual unsigned char getData() const = 0;
 
     virtual void print(std::ostream& os) const = 0;
+
+    virtual int getStatus() const = 0;
 };
 
 struct StandardCard : Card {
@@ -52,9 +54,14 @@ struct StandardCard : Card {
         // Empty
     }
 
-    unsigned char getData()
+    unsigned char getData() const
     {
         return data;
+    }
+
+    int getStatus() const
+    {
+        return (int)(data & 0xf);
     }
 };
 
@@ -68,9 +75,14 @@ struct JokerCard : Card {
         // Empty
     }
 
-    unsigned char getData()
+    unsigned char getData() const
     {
         return data;
+    }
+
+    int getStatus() const
+    {
+        return ((int)((data >> 6) & 0x4)) + 14;
     }
 };
 
@@ -80,5 +92,13 @@ std::ostream& operator<<(std::ostream& os, StandardCard const& s);
 
 std::ostream& operator<<(std::ostream& os, Suit s);
 std::ostream& operator<<(std::ostream& os, Rank r);
+std::ostream& operator<<(std::ostream& os, Color co);
+
+bool operator==(Card const& c, Card const& c2);
+bool operator!=(Card const& c, Card const& c2);
+bool operator<(Card const& c, Card const& c2);
+bool operator<=(Card const& c, Card const& c2);
+bool operator>(Card const& c, Card const& c2);
+bool operator>=(Card const& c, Card const& c2);
 
 #endif //CARD_HPP

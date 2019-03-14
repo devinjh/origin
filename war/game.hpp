@@ -19,6 +19,6 @@ public:
 
     War();
 
-    //void playWar();
+    void playWar();
 
 };

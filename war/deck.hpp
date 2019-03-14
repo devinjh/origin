@@ -16,6 +16,8 @@ public:
 
     Deck();
 
+    void putCardsAtEndOfDeck(int numOfCards);
+
     void addCard(Card* card);
 
     void viewDeck();

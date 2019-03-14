@@ -35,9 +35,6 @@ War::War()
 
     // Creating two jokers
     tempData = 0;
-    tempData >>= 6;
-    tempData += 1;
-    tempData <<= 6;
     for (int x = 0; x < 2; ++x)
     {
         fullDeck.push_back(new JokerCard(tempData));
@@ -83,7 +80,7 @@ War::War()
     playerTwoDeck.viewDeck();
     std::cout << "\n\n";
 }
-/*
+
 void War::playWar()
 {
     // This continously checks to see if either player is out of cards
@@ -93,13 +90,14 @@ void War::playWar()
         // Resetting the number of cards flipped to zero
         int numOfFlips = 0;
 
-        std::cout << "HERE" << std::endl;
-        std::cout << "Card: " << playerOneDeck.get(0) << std::endl;
+        // This is used in the ocassion that more cards need to be flipped out than what's
+        // available. They keep track of which deck is almost out
+        bool deckOneOut = false;
+        bool deckTwoOut = false;
 
         // Checks to see if each player's first card is equal or not
-        if (*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips))
+        if ((*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips)) && !(deckOneOut || deckTwoOut))
         {
-            std::cout << "HERE2" << std::endl;
             // Displaying to the user what is happening
             std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
             std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
@@ -108,8 +106,24 @@ void War::playWar()
             // Two more cards are flipped out
             numOfFlips += 2;
 
+            // This is to make sure that the number of cards that comes out isn't greater than one of the
+            // sizes of the player's decks
+            //
+            // Checks to see if player one is out of cards and makes the appropriate adjustments
+            if (numOfFlips > playerOneDeck.getSize())
+            {
+                numOfFlips = playerOneDeck.getSize() - 1;
+                deckOneOut = true;
+            }
+            // Checks to see if player two is out of cards and makes the appropriate adjustments
+            else if (numOfFlips > playerTwoDeck.getSize())
+            {
+                numOfFlips = playerTwoDeck.getSize() - 1;
+                deckTwoOut = true;
+            }
+
             // The last of the two cards to be flipped out is compared with the other
-            while (*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips))
+            while ((*playerOneDeck.get(numOfFlips) == *playerTwoDeck.get(numOfFlips))  && !(deckOneOut || deckTwoOut))
             {
                 // Displaying to the user what is happening
                 std::cout << "Player One's Card: " << *playerOneDeck.get(numOfFlips) << std::endl;
@@ -118,10 +132,49 @@ void War::playWar()
 
                 // Two more cards are flipped out
                 numOfFlips += 2;
+
+                // This is to make sure that the number of cards that comes out isn't greater than one of the
+                // sizes of the player's decks
+                //
+                // Checks to see if player one is out of cards and makes the appropriate adjustments
+                if (numOfFlips > playerOneDeck.getSize())
+                {
+                    numOfFlips = playerOneDeck.getSize() - 1;
+                    deckOneOut = true;
+                }
+                // Checks to see if player two is out of cards and makes the appropriate adjustments
+                else if (numOfFlips > playerTwoDeck.getSize())
+                {
+                    numOfFlips = playerTwoDeck.getSize() - 1;
+                    deckTwoOut = true;
+                }
             }
         }
+/*
+        // TESTING ONLY!!!!!
+        std::cout << "\n\n\nBefore Transfer";
+        std::cout << "Player One's Deck:\n";
+        playerOneDeck.viewDeck();
+        std::cout << "\nPlayer Two's Deck:\n";
+        playerTwoDeck.viewDeck();*/
+        std::cout << "\n\n\nBefore Transfer\nPlayer One Deck Size: " << playerOneDeck.getSize() << "\nPlayer Two Deck Size: ";
+        std::cout << playerTwoDeck.getSize() << std::endl;
 
-        std::cout << "HERE3" << std::endl;
+        // This is to make sure that the number of cards that comes out isn't greater than one of the
+        // sizes of the player's decks
+        //
+        // Checks to see if player one is out of cards and makes the appropriate adjustments
+        if (numOfFlips > playerOneDeck.getSize())
+        {
+            numOfFlips = playerOneDeck.getSize() - 1;
+            deckOneOut = true;
+        }
+        // Checks to see if player two is out of cards and makes the appropriate adjustments
+        else if (numOfFlips > playerTwoDeck.getSize())
+        {
+            numOfFlips = playerTwoDeck.getSize() - 1;
+            deckTwoOut = true;
+        }
 
         // Now that a victor has been determined, cards are transfered from one deck to another
         if (*playerOneDeck.get(numOfFlips) < *playerTwoDeck.get(numOfFlips))
@@ -133,6 +186,9 @@ void War::playWar()
 
             // Transferring the appropriate number of cards to player two from player one
             playerOneDeck.transferCardsTo(playerTwoDeck, numOfFlips + 1);
+
+            // Making sure the cards that player two just played are put at the end of their deck
+            playerTwoDeck.putCardsAtEndOfDeck(numOfFlips + 1);
         }
         else
         {
@@ -141,9 +197,21 @@ void War::playWar()
             std::cout << "Player Two's Card: " << *playerTwoDeck.get(numOfFlips) << std::endl;
             std::cout << "This means Player One gets " << (numOfFlips + 1) << " cards from Player Two!\n\n";
 
-            // Transferring the appropriate number of cards to player two from player one
+            // Transferring the appropriate number of cards to player one from player two
             playerTwoDeck.transferCardsTo(playerOneDeck, numOfFlips + 1);
+
+            // Making sure the cards that player one just played are put at the end of their deck
+            playerOneDeck.putCardsAtEndOfDeck(numOfFlips + 1);
         }
+/*
+        // TESTING ONLY!!!!!
+        std::cout << "\n\n\nAfter Transfer";
+        std::cout << "Player One's Deck:\n";
+        playerOneDeck.viewDeck();
+        std::cout << "\nPlayer Two's Deck:\n";
+        playerTwoDeck.viewDeck();*/
+        std::cout << "\n\n\nAfter Transfer\nPlayer One Deck Size: " << playerOneDeck.getSize() << "\nPlayer Two Deck Size: ";
+        std::cout << playerTwoDeck.getSize() << std::endl;
     }
 
     // Declaring the winner and displaying it to the winner
@@ -155,4 +223,4 @@ void War::playWar()
     {
         std::cout << "Player 1 wins!" << std::endl;
     }
-}*/
+}

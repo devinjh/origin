@@ -12,7 +12,7 @@ Deck::Deck()
 }
 
 void Deck::addCard(Card* ccard)
-{
+{    
     // Adding a card to the end of the deck
     deck.push_back(ccard);
 }
@@ -35,10 +35,20 @@ void Deck::transferCardsTo(Deck &otherDeck, int numOfCards)
     // the other deck
     for (int x = 0; x < numOfCards; ++x)
     {
-        // Adding the card to the other deck
+        // Adding the loser's card to the other deck
         otherDeck.addCard(deck[0]);
 
-        // Taking the card out of this deck
+        // Taking the loser's card out of their (this) deck
+        deck.erase(deck.begin());
+    }
+}
+
+void Deck::putCardsAtEndOfDeck(int numOfCards)
+{
+    for (int x = 0; x < numOfCards; ++x)
+    {
+        addCard(deck[0]);
+
         deck.erase(deck.begin());
     }
 }

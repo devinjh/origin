@@ -7,7 +7,6 @@
 std::ostream& operator<<(std::ostream& os, StandardCard const& c)
 {
     return os << static_cast<Rank>(os, c.getData() & 0xf) << static_cast<Suit>(os, c.getData() >> 4);
-    //return os << "Standard" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& os, Suit s)
@@ -41,9 +40,19 @@ std::ostream& operator<<(std::ostream& os, Rank r)
     }
 }
 
+std::ostream& operator<<(std::ostream& os, Color co)
+{
+    // Displays the appropriate color when given a color
+    switch (co) {
+        case Red: return os << "R";
+        case Black: return os << "B";
+    }
+}
+
 std::ostream& operator<<(std::ostream& os, JokerCard const& c)
 {
-    return os << "Joker" << std::endl;
+    os << static_cast<Color>(os, c.getData() >> 6);
+    return os << "J";
 }
 
 void StandardCard::print(std::ostream& os) const
@@ -61,6 +70,64 @@ std::ostream& operator<<(std::ostream& os, Card const& c)
     c.print(os);
     return os;
 }
+
+bool operator==(Card const& c, Card const& c2)
+{
+    if (c.getStatus() == c2.getStatus())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool operator!=(Card const& c, Card const& c2)
+{
+    return !(c == c2);
+}
+
+bool operator<(Card const& c, Card const& c2)
+{
+    if (c.getStatus() < c2.getStatus())
+    {
+        return true;
+    }
+    return false;
+}
+
+bool operator<=(Card const& c, Card const& c2)
+{
+    return !(c2 < c);
+}
+
+bool operator>(Card const& c, Card const& c2)
+{
+    return (c2 < c);
+}
+
+bool operator>=(Card const& c, Card const& c2)
+{
+    return !(c < c2);
+}
+
+//
+/*
+bool operator>(Card a, Card b)
+{
+    return (b < a);
+}
+
+// Compared by each card's rank
+bool operator<=(Card a, Card b)
+{
+    return !(b < a);
+}
+
+// Compared by each card's rank
+bool operator>=(Card a, Card b)
+{
+    return !(a < b);
+}
+*/
 
 // The if statement to see if a card is a joker or not (true if yes)
 // if ((((c.getData() >> 6) & 0x1) == 1) || ((((c.getData() >> 6) & 0x1) == 0) && ((c.getData() >> 7) & 0x1) == 1))
