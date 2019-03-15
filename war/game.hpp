@@ -4,8 +4,6 @@
 
 #include "deck.hpp"
 #include "card.hpp"
-//#include "standardCard.hpp"
-//#include "jokerCard.hpp"
 
 class War{
 

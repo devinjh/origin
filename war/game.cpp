@@ -51,15 +51,10 @@ War::War()
         // Making the random number
         int randOne = rand() % deckSize;
 
-        // Taking the card out of the deck, putting it into tempCard, and then putting
-        // it back into the end of the vector, effectively shuffling it
+        // Decking the card at the random spot and putting it at the back. The front
+        // card is then erased to ensure there are no duplicates
         fullDeck.push_back(fullDeck[randOne]);
         fullDeck.erase(fullDeck.begin() + randOne);
-        /*
-        Card tempCard = fullDeck[randOne];
-        fullDeck.erase(fullDeck.begin() + randOne);
-        fullDeck.push_back(tempCard);
-        */
     }
 
     // Putting the cards into the decks of the players
@@ -150,15 +145,6 @@ void War::playWar()
                 }
             }
         }
-/*
-        // TESTING ONLY!!!!!
-        std::cout << "\n\n\nBefore Transfer";
-        std::cout << "Player One's Deck:\n";
-        playerOneDeck.viewDeck();
-        std::cout << "\nPlayer Two's Deck:\n";
-        playerTwoDeck.viewDeck();*/
-        std::cout << "\n\n\nBefore Transfer\nPlayer One Deck Size: " << playerOneDeck.getSize() << "\nPlayer Two Deck Size: ";
-        std::cout << playerTwoDeck.getSize() << std::endl;
 
         // This is to make sure that the number of cards that comes out isn't greater than one of the
         // sizes of the player's decks
@@ -203,24 +189,15 @@ void War::playWar()
             // Making sure the cards that player one just played are put at the end of their deck
             playerOneDeck.putCardsAtEndOfDeck(numOfFlips + 1);
         }
-/*
-        // TESTING ONLY!!!!!
-        std::cout << "\n\n\nAfter Transfer";
-        std::cout << "Player One's Deck:\n";
-        playerOneDeck.viewDeck();
-        std::cout << "\nPlayer Two's Deck:\n";
-        playerTwoDeck.viewDeck();*/
-        std::cout << "\n\n\nAfter Transfer\nPlayer One Deck Size: " << playerOneDeck.getSize() << "\nPlayer Two Deck Size: ";
-        std::cout << playerTwoDeck.getSize() << std::endl;
     }
 
-    // Declaring the winner and displaying it to the winner
+    // Declaring the winner and displaying it
     if (playerOneDeck.getSize() == 0)
     {
-        std::cout << "Player 2 wins!" << std::endl;
+        std::cout << "And with that, Player 1 is out of cards! Player 2 wins!" << std::endl;
     }
     else
     {
-        std::cout << "Player 1 wins!" << std::endl;
+        std::cout << "And with that, Player 2 is out of cards! Player 1 wins!" << std::endl;
     }
 }

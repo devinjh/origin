@@ -3,8 +3,6 @@
 // 4190350
 
 #include "deck.hpp"
-#include <ctime>
-#include <cstdlib>
 
 Deck::Deck()
 {
@@ -45,10 +43,14 @@ void Deck::transferCardsTo(Deck &otherDeck, int numOfCards)
 
 void Deck::putCardsAtEndOfDeck(int numOfCards)
 {
+    // This loop takes one card from the front of the deck and puts it
+    // at the end
     for (int x = 0; x < numOfCards; ++x)
     {
+        // Adding the card to the end
         addCard(deck[0]);
 
+        // Deleting it from the front
         deck.erase(deck.begin());
     }
 }

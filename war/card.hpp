@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+// Rank enum for the standard card
 enum Rank {
     Ace,
     Two,
@@ -23,6 +24,7 @@ enum Rank {
     King,
 };
 
+// Suit enum for the standard card
 enum Suit {
     Hearts,
     Spades,
@@ -30,11 +32,15 @@ enum Suit {
     Clubs
 };
 
+// Color enum for the joker card
 enum Color {
     Red,
     Black,
 };
 
+// Abstract Card struct
+// All of the other cards (standard card and joker card) are derived
+// from this struct
 struct Card {
     virtual unsigned char getData() const = 0;
 
@@ -49,16 +55,19 @@ struct StandardCard : Card {
     //std::ostream& print(std::ostream& os) const override;
     void print(std::ostream& os) const override;
 
+    // Constructor
     StandardCard(unsigned char incomingData) : data(incomingData)
     {
         // Empty
     }
 
+    // This returns the unsigned char
     unsigned char getData() const
     {
         return data;
     }
 
+    // This returns a numerical value of the card
     int getStatus() const
     {
         return (int)(data & 0xf);
@@ -70,30 +79,36 @@ struct JokerCard : Card {
 
     void print(std::ostream& os) const override;
 
+    // Constructor
     JokerCard(unsigned char incomingData) : data(incomingData)
     {
         // Empty
     }
 
+    // This returns the unsigned char
     unsigned char getData() const
     {
         return data;
     }
 
+    // This returns a numerical value of the card
     int getStatus() const
     {
-        return ((int)((data >> 6) & 0x4)) + 14;
+        return 14;
     }
 };
 
+// The output overrides for each of the structs
 std::ostream& operator<<(std::ostream& os, Card const& c);
 std::ostream& operator<<(std::ostream& os, JokerCard const& j);
 std::ostream& operator<<(std::ostream& os, StandardCard const& s);
 
+// The output overrides for each of the enums
 std::ostream& operator<<(std::ostream& os, Suit s);
 std::ostream& operator<<(std::ostream& os, Rank r);
 std::ostream& operator<<(std::ostream& os, Color co);
 
+// Boolean operators for comparing two cards
 bool operator==(Card const& c, Card const& c2);
 bool operator!=(Card const& c, Card const& c2);
 bool operator<(Card const& c, Card const& c2);
