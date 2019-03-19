@@ -5,7 +5,11 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
+// Testing only
+//#include <iostream>
+
 #include "car.hpp"
+#include "object.hpp"
 
 using namespace sf;
 
@@ -29,6 +33,8 @@ int main()
     // Look into
     sCar.setOrigin(22, 22);
     float R = 22;
+    // This is for the test of R
+    //float R = 44;
 
     // This is the number of cars
     const int N = 5;
@@ -196,23 +202,53 @@ int main()
         
         // This section is for collision
         //
-        // Look into
+        // These loops compare each car with every other car
         for(int i = 0; i < N; i++)
         {
             for(int j = 0; j < N; j++)
             {      
+                // dx is the difference in pixels between car i and car j in the x axis
                 int dx = 0;
+                // dy is the difference in pixels between car i and car j in the y axis
                 int dy = 0;
+
+                // This loop goes while the difference in pixels squared between car i
+                // and car j is less than 4 times the R value squared
+                // (The R value is declared in the beginning of main)
                 while (dx * dx + dy * dy < 4 * R * R)
                 {
+                    // This moves car i's x coordinate to the right
                     car[i].x += dy / 10.0;
                     car[i].x += dx / 10.0;
+                    // This moves car j's x coordinate to the left
                     car[j].x -= dx / 10.0;
+                    // This moves car j's y coordinate down
                     car[j].y -= dy / 10.0;
+                    // This calculates the difference in the x and y coordinates of both cars
                     dx = car[i].x - car[j].x;
                     dy = car[i].y - car[j].y;
+
+                    // TESTING ONLY
+                    /*std::cout << "  i: " << i << std::endl;
+                    std::cout << "  j: " << j << std::endl;
+                    std::cout << " dx: " << dx << std::endl;
+                    std::cout << "!dx: " << !dx << std::endl;
+                    std::cout << " dy: " << dy << std::endl;
+                    std::cout << "!dy: " << !dy << std::endl;
+                    std::cout << "\n\n\n";*/
+
+                    // If the dx and dy are 0 (zero), then the loop breaks. This is to make
+                    // there's not an infinite loop by judging the distance between the same
+                    // car (ex: i = j)
+                    //
+                    // A different way to explain: If dx = 0, then !dx = true
+                    //                                dy = 0, then !dy = true
+                    //
+                    // A different way to explain: If dx != 0, then !dx = false
+                    //                                dy != 0, then !dy = false
                     if (!dx && !dy)
                     {
+                        //std::cout << "BREAK" << std::endl;
                         break;
                     }
                 }
