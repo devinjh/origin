@@ -63,6 +63,7 @@ int main()
         car[i].x = 300 + i * 50;
         car[i].y = 1700 + i * 80;
         car[i].speed = 7 + i;
+        car[i].maxSpeed = 7 + i;
     }
     
     // Setting all the variables for the user's car
@@ -187,7 +188,20 @@ int main()
         // it needs to start slowing down
         if (speed > maxSpeed)
         {
-            speed -= (dec / 3.0);
+            speed -= (dec / 4.0);
+        }
+
+        // If the computer is going above its maximum speed (meaning it just came off a boostpad)
+        // then it needs to slow down
+        for (int i = 0; i < N; i++)
+        {
+            if (i != 0)
+            {
+                if (car[i].speed > car[i].maxSpeed)
+                {
+                    car[i].speed -= (dec / 4.0);
+                }
+            }
         }
         
         // This section is for changing the user's car's angle
@@ -304,10 +318,6 @@ int main()
                 // Taking the car to the end of the boostpad
                 car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
                 car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
-                //car[i].x += 0;
-                //car[i].y -= 1;
-
-                //std::cout << "speed (boost): " << speed << std::endl;
 
                 // Adjusting the car's speed
                 //car[i].speed = maxSpeed + 5;
@@ -315,16 +325,16 @@ int main()
                 // This is just to make sure it's the user's car
                 if (i == 0)
                 {
-                    speed = maxSpeed + 5;
+                    speed = maxSpeed + 6;
                 }
+                // If it's not the user's car, then this increases the computer's car
+                // speed
                 else
                 {
-                    // to do 
+                    car[i].speed = maxSpeed + 6;
                 }
             }
         }
-
-        //std::cout << "        speed: " << speed << std::endl;
         
         // Look into
         app.clear(Color::White);

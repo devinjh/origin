@@ -8,6 +8,7 @@ Car::Car()
 {
     // Setting all the variables to a something
     speed = 2;
+    maxSpeed = 2;
     angle = 0;
     n = 0;
     x = 0;

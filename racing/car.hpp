@@ -13,7 +13,7 @@ class Car {
         //int points; // spots of the checkpoints
 
     public:
-        float x, y, speed, angle;
+        float x, y, speed, angle, maxSpeed;
 
         int n;
 
