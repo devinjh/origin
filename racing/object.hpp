@@ -9,18 +9,32 @@ struct Object {
     // These are for changing the speed of the car
     virtual float changeXSpeed() const = 0;
     virtual float changeYSpeed() const = 0;
+
+    // Gets the image link of the object
+    virtual std::string getImageLink() const = 0;
 };
 
 struct BoostPad : Object {
-    // Changing the x speed
-    float changeXSpeed()
+
+    BoostPad()
     {
-        return 1;
+        // Empty
+    }
+
+    // Changing the x speed
+    float changeXSpeed() const
+    {
+        return 0.5;
     }
 
     // Changing the y speed
-    float changeYSpeed()
+    float changeYSpeed() const
     {
-        return 1;
+        return 0.5;
+    }
+
+    std::string getImageLink() const
+    {
+        return "images/boostpad.png";
     }
 };

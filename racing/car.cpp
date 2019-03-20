@@ -54,7 +54,7 @@ void Car::findTarget()
     {
         angle += 0.005 * speed;
     }
-    // If the sin of beta is positive, the oposite is true and thus the opposite needs to happen
+    // If the sin of beta is positive, the opposite is true and thus the opposite needs to happen
     else
     {
         angle -= 0.005 * speed;

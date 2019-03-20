@@ -6,7 +6,7 @@
 #include <cmath>
 
 // Testing only
-//#include <iostream>
+#include <iostream>
 
 #include "car.hpp"
 #include "object.hpp"
@@ -15,6 +15,9 @@ using namespace sf;
 
 int main()
 {
+    // Creating objects in the race course
+    BoostPad boostpad1;
+
     // Look into
     RenderWindow app(VideoMode(640, 480), "Car Racing Game!");
 	app.setFramerateLimit(60);
@@ -23,20 +26,32 @@ int main()
     Texture t1,t2,t3;
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/car.png");
+    t3.loadFromFile(boostpad1.getImageLink());
     t1.setSmooth(true);
     t2.setSmooth(true);
+    t3.setSmooth(true);
 
-    // Look into
-    Sprite sBackground(t1), sCar(t2);
-    sBackground.scale(2,2);
+    // This makes the images into sprites
+    //
+    // Original dimensions:
+    // Background: 1440x1824
+    // Car: 43x45
+    // Boostpad: 256x256
+    Sprite sBackground(t1), sCar(t2), sBoostPad1(t3);
+
+    // Setting the scale of the images
+    //
+    // The first number is how much it's stretched on the x coordinate and
+    // the second number is how much it's stretched on the y coordinate
+    sBackground.scale(2,2); // Makes pixel measurement to be 2880x3648
+    sBoostPad1.scale(.2,.2); // Makes the pixel measurement be 51x51
 
     // Look into
     sCar.setOrigin(22, 22);
     float R = 22;
-    // This is for the test of R
-    //float R = 44;
 
     // This is the number of cars
+    // Normal amount is 5 cars
     const int N = 5;
 
     // Making an array to contain each car
@@ -50,7 +65,7 @@ int main()
         car[i].speed = 7 + i;
     }
     
-    // Setting all the variables for each car
+    // Setting all the variables for the user's car
     float speed = 0;
     float angle = 0;
     float maxSpeed = 12.0;
@@ -130,7 +145,7 @@ int main()
         // If the down arow key has been pressed and the speed of the car is greater than
         // the max speed in the reverse direction, then the car's speed in the reverse
         // direction changes
-        if (Down && speed >- maxSpeed)
+        if (Down && speed > -maxSpeed)
         {
             // If the car is going in the forward direction (speed > 0), then the car must
             // be slowed down before it can go in the reverse direction
@@ -167,6 +182,13 @@ int main()
                 speed = 0;
             }
         }
+
+        // If the car is going above the maximum speed (meaning it just came off a boostpad) then
+        // it needs to start slowing down
+        if (speed > maxSpeed)
+        {
+            speed -= (dec / 3.0);
+        }
         
         // This section is for changing the user's car's angle
         //
@@ -188,24 +210,24 @@ int main()
         car[0].angle = angle;
         
         // This is performing the actual moving of every single car
-        for(int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++)
         {
             car[i].move();
         }
         
         // This is telling the computer cars where their next target is and how they need to
         // adjust to get there
-        for(int i = 1; i < N; i++)
+        for (int i = 1; i < N; i++)
         {
             car[i].findTarget();
         }
         
-        // This section is for collision
+        // This section is for collision with other cars
         //
         // These loops compare each car with every other car
-        for(int i = 0; i < N; i++)
+        for (int i = 0; i < N; i++)
         {
-            for(int j = 0; j < N; j++)
+            for (int j = 0; j < N; j++)
             {      
                 // dx is the difference in pixels between car i and car j in the x axis
                 int dx = 0;
@@ -228,15 +250,6 @@ int main()
                     dx = car[i].x - car[j].x;
                     dy = car[i].y - car[j].y;
 
-                    // TESTING ONLY
-                    /*std::cout << "  i: " << i << std::endl;
-                    std::cout << "  j: " << j << std::endl;
-                    std::cout << " dx: " << dx << std::endl;
-                    std::cout << "!dx: " << !dx << std::endl;
-                    std::cout << " dy: " << dy << std::endl;
-                    std::cout << "!dy: " << !dy << std::endl;
-                    std::cout << "\n\n\n";*/
-
                     // If the dx and dy are 0 (zero), then the loop breaks. This is to make
                     // there's not an infinite loop by judging the distance between the same
                     // car (ex: i = j)
@@ -248,16 +261,12 @@ int main()
                     //                                dy != 0, then !dy = false
                     if (!dx && !dy)
                     {
-                        //std::cout << "BREAK" << std::endl;
                         break;
                     }
                 }
             }
         }
-        
-        // Look into
-        app.clear(Color::White);
-        
+
         // If the user's car goes to far from the left edge, then the screen must move to keep up with
         // the user's car. This gets the x coordinate of where the center of the screen should be
         if (car[0].x > 320)
@@ -271,11 +280,62 @@ int main()
         {
             offsetY = car[0].y - 240;
         }
+
+        // This section is for collision with boostpads
+        //
+        // This loops compare each car with the boostpad
+        for (int i = 0; i < N; i++)
+        {
+            // dx is the difference in pixels between car i and the boostpad in the x axis
+            int dx = car[i].x - 275;
+            // dy is the difference in pixels between car i and the boostpad in the y axis
+            int dy = car[i].y - 914;
+
+            // This loop goes while the difference in pixels squared between car i
+            // and the boostpad. Once the car is off the boostpad, the speed is no longer
+            // increased
+            while (dx * dx < 45 * 45 && dy * dy < 45 * 45)
+            {
+                // This calculates the difference in the x and y coordinates of the car
+                // and the boostpad
+                dx = car[i].x - 275;
+                dy = car[i].y - 914;
+
+                // Taking the car to the end of the boostpad
+                car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
+                car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
+                //car[i].x += 0;
+                //car[i].y -= 1;
+
+                //std::cout << "speed (boost): " << speed << std::endl;
+
+                // Adjusting the car's speed
+                //car[i].speed = maxSpeed + 5;
+
+                // This is just to make sure it's the user's car
+                if (i == 0)
+                {
+                    speed = maxSpeed + 5;
+                }
+                else
+                {
+                    // to do 
+                }
+            }
+        }
+
+        //std::cout << "        speed: " << speed << std::endl;
+        
+        // Look into
+        app.clear(Color::White);
         
         // This changes where the screen is so the user's car stays in the middle, so long as
         // the user isn't near the left or top edge by using the values obtained above
         sBackground.setPosition(-offsetX, -offsetY);
         app.draw(sBackground);
+        // This makes sure the boostpad stay in their proper spot as well
+        sBoostPad1.setPosition(-offsetX + 250, -offsetY + 850);
+        app.draw(sBoostPad1);
         
         // These are the colors of the car
         Color colors[10] = {Color::Red, Color::Green, Color::Magenta, Color::Blue, Color::White};
