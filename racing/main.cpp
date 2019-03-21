@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <vector>
 
 // Testing only
 #include <iostream>
@@ -15,21 +16,43 @@ using namespace sf;
 
 int main()
 {
-    // Creating objects in the race course
-    BoostPad boostpad1;
-
     // Look into
     RenderWindow app(VideoMode(640, 480), "Car Racing Game!");
 	app.setFramerateLimit(60);
 
+    // Testing only
+    BoostPad boostpad1{"images/boostpad.png", 250, 850};
+
     // Look into
-    Texture t1,t2,t3;
+    Texture t1, t2;
+    //Texture t3;
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/car.png");
-    t3.loadFromFile(boostpad1.getImageLink());
+    //t3.loadFromFile(boostpad1.getImageLink());
     t1.setSmooth(true);
     t2.setSmooth(true);
-    t3.setSmooth(true);
+    //t3.setSmooth(true);
+
+    // Making two parallel vectors to contain all of the race track's objects
+    std::vector<Object*> objects;
+    std::vector<Sprite> sprites;
+
+    // Creating objects in the race course and putting them into the objects vector
+    objects.push_back(new BoostPad("images/boostpad.png", 250, 850));
+
+    // Testing only!!!!!
+    objects.push_back(new BoostPad("images/boostpad.png", 1000, 1000));
+
+    // Creating sprites and putting them into their appropriate places to correlate with the objects
+    Texture t;
+    for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
+    {
+        t.loadFromFile((*vIter)->getImageLink());
+        t.setSmooth(true);
+        Sprite st(t);
+        st.scale((*vIter)->getXScale(), (*vIter)->getYScale());
+        sprites.push_back(st);
+    }
 
     // This makes the images into sprites
     //
@@ -37,14 +60,18 @@ int main()
     // Background: 1440x1824
     // Car: 43x45
     // Boostpad: 256x256
-    Sprite sBackground(t1), sCar(t2), sBoostPad1(t3);
+    std::cout << "    boost pixel: 256x256" << std::endl;
+    std::cout << "           goal: 275x914" << std::endl;
+    std::cout << "boost pixel (m): " << (int)(256 * 1.074) << "x" << (int)(256 * 3.57) << std::endl;
+    Sprite sBackground(t1), sCar(t2);
+    //Sprite sBoostPad1(t3);
 
     // Setting the scale of the images
     //
     // The first number is how much it's stretched on the x coordinate and
     // the second number is how much it's stretched on the y coordinate
     sBackground.scale(2,2); // Makes pixel measurement to be 2880x3648
-    sBoostPad1.scale(.2,.2); // Makes the pixel measurement be 51x51
+    //sBoostPad1.scale(.2,.2); // Makes the pixel measurement be 51x51
 
     // Look into
     sCar.setOrigin(22, 22);
@@ -184,23 +211,19 @@ int main()
             }
         }
 
-        // If the car is going above the maximum speed (meaning it just came off a boostpad) then
-        // it needs to start slowing down
-        if (speed > maxSpeed)
-        {
-            speed -= (dec / 4.0);
-        }
-
-        // If the computer is going above its maximum speed (meaning it just came off a boostpad)
+        // If a car is going above its maximum speed (meaning it just came off a boostpad)
         // then it needs to slow down
         for (int i = 0; i < N; i++)
         {
-            if (i != 0)
+            // User's car
+            if (i == 0 && speed > maxSpeed)
             {
-                if (car[i].speed > car[i].maxSpeed)
-                {
-                    car[i].speed -= (dec / 4.0);
-                }
+                speed -= (dec / 4.0);
+            }
+            // Computer cars
+            else if (car[i].speed > car[i].maxSpeed)
+            {
+                car[i].speed -= (dec / 4.0);
             }
         }
         
@@ -295,15 +318,17 @@ int main()
             offsetY = car[0].y - 240;
         }
 
-        // This section is for collision with boostpads
+        // This section is for collision with objects
         //
-        // This loops compare each car with the boostpad
+        // This loops compare each car with the objects
         for (int i = 0; i < N; i++)
         {
-            // dx is the difference in pixels between car i and the boostpad in the x axis
+            // This calculates the difference in the x and y coordinates of the car
+            // and the boostpad
             int dx = car[i].x - 275;
-            // dy is the difference in pixels between car i and the boostpad in the y axis
             int dy = car[i].y - 914;
+            //int dx = car[i].x - 250;
+            //int dy = car[i].y - 850;
 
             // This loop goes while the difference in pixels squared between car i
             // and the boostpad. Once the car is off the boostpad, the speed is no longer
@@ -314,15 +339,14 @@ int main()
                 // and the boostpad
                 dx = car[i].x - 275;
                 dy = car[i].y - 914;
+                //dx = car[i].x - 250;
+                //dy = car[i].y - 850;
 
                 // Taking the car to the end of the boostpad
                 car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
                 car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
 
-                // Adjusting the car's speed
-                //car[i].speed = maxSpeed + 5;
-
-                // This is just to make sure it's the user's car
+                // This is just to see if it's the user's car
                 if (i == 0)
                 {
                     speed = maxSpeed + 6;
@@ -344,8 +368,17 @@ int main()
         sBackground.setPosition(-offsetX, -offsetY);
         app.draw(sBackground);
         // This makes sure the boostpad stay in their proper spot as well
-        sBoostPad1.setPosition(-offsetX + 250, -offsetY + 850);
-        app.draw(sBoostPad1);
+        //sBoostPad1.setPosition(-offsetX + boostpad1.getXCoordinate(), -offsetY + boostpad1.getYCoordinate());
+        //app.draw(sBoostPad1);
+
+        std::vector<Sprite>::iterator sIter = sprites.begin();
+        for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
+        {
+            (*sIter).setPosition(-offsetX + (*vIter)->getXCoordinate(), -offsetY + (*vIter)->getYCoordinate());
+            app.draw((*sIter));
+
+            ++sIter;
+        }
         
         // These are the colors of the car
         Color colors[10] = {Color::Red, Color::Green, Color::Magenta, Color::Blue, Color::White};
