@@ -25,38 +25,39 @@ int main()
 
     // Look into
     Texture t1, t2;
-    //Texture t3;
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/car.png");
-    //t3.loadFromFile(boostpad1.getImageLink());
     t1.setSmooth(true);
     t2.setSmooth(true);
-    //t3.setSmooth(true);
 
     // Making two parallel vectors to contain all of the race track's objects
     std::vector<Object*> objects;
     std::vector<Sprite> sprites;
 
     // Creating objects in the race course and putting them into the objects vector
-    objects.push_back(new BoostPad("images/boostpad.png", 250, 850));
-
-    // Testing only!!!!!
-    objects.push_back(new BoostPad("images/boostpad.png", 2880, 3648));
+    objects.push_back(new BoostPad("images/boostpad.png", 250, 900));
 
     // Creating sprites and putting them into their appropriate places to correlate with the objects
-    Texture t;
+    //
     // Original dimensions of object textures:
     //
     // Background: 1440x1824
     // Car: 43x45
     // Boostpad: 256x256
+    Texture t;
     for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
     {
+        // Putting an image with the texture and making it smooth
         t.loadFromFile((*vIter)->getImageLink());
         t.setSmooth(true);
+
+        // Setting the sprite wuth the texture
         Sprite st(t);
+
+        // Making the sprite the same scale as the object
         st.scale((*vIter)->getXScale(), (*vIter)->getYScale());
-        //st.setScale((*vIter)->getXScale(), (*vIter)->getYScale());
+
+        // Pushing the sprite onto the vector
         sprites.push_back(st);
     }
 
@@ -69,7 +70,6 @@ int main()
     // The first number is how much it's stretched on the x coordinate and
     // the second number is how much it's stretched on the y coordinate
     sBackground.scale(2,2); // Makes pixel measurement to be 2880x3648
-    //sBoostPad1.scale(.2,.2); // Makes the pixel measurement be 51x51
 
     // Look into
     sCar.setOrigin(22, 22);
@@ -82,7 +82,7 @@ int main()
     // Making an array to contain each car
     Car car[N];
 
-    // Setting each car in their proper starting spot
+    // Setting each computer car in their proper starting spot
     for(int i = 0; i < N; i++)
     {
         car[i].x = 300 + i * 50;
@@ -92,12 +92,8 @@ int main()
     }
     
     // Setting all the variables for the user's car
-    float speed = 0;
-    float angle = 0;
-    float maxSpeed = 12.0;
-    float acc = 0.2;
-    float dec = 0.3;
-    float turnSpeed = 0.08;
+    car[0].maxSpeed = 12.0;
+    car[0].speed = 0;
     
     // Look into
     int offsetX = 0;
@@ -152,38 +148,38 @@ int main()
         // If the up arow key has been pressed and the speed of the car is less than
         // the max speed in the forward direction, then the car's speed in the forward
         // direction changes
-        if (Up && speed < maxSpeed)
+        if (Up && car[0].speed < car[0].maxSpeed)
         {
             // If the car is going in the reverse direction (speed < 0), it must slow down before
             // going in the forward direction. Thus, the car is slowed down
-            if (speed < 0) 
+            if (car[0].speed < 0) 
             {
-                speed += dec;
+                car[0].speed += car[0].dec;
             }
             // If the car is already going in the forward direction or isn't moving, then
             // the car is sped up
             else
             {
-                speed += acc;
+                car[0].speed += car[0].acc;
             }
         }
         
         // If the down arow key has been pressed and the speed of the car is greater than
         // the max speed in the reverse direction, then the car's speed in the reverse
         // direction changes
-        if (Down && speed > -maxSpeed)
+        if (Down && car[0].speed > -car[0].maxSpeed)
         {
             // If the car is going in the forward direction (speed > 0), then the car must
             // be slowed down before it can go in the reverse direction
-            if (speed > 0)
+            if (car[0].speed > 0)
             {
-                speed -= dec;
+                car[0].speed -= car[0].dec;
             }
             // If the car is going in the reverse direction or isn't moving, then the car
             // is sped up in the reverse direction
             else
             {
-                speed -= acc;
+                car[0].speed -= car[0].acc;
             }
         }
         
@@ -192,20 +188,20 @@ int main()
         if (!Up && !Down)
         {
             // If the car is moving in the forward direction
-            if (speed - dec > 0)
+            if (car[0].speed - car[0].dec > 0)
             {
-                speed -= dec;
+                car[0].speed -= car[0].dec;
             }
             // If the car is moving in the reverse direction
-            else if (speed + dec < 0)
+            else if (car[0].speed + car[0].dec < 0)
             {
-                speed += dec;
+                car[0].speed += car[0].dec;
             }
             // If the car is pretty muched stopped or is stopped, then the car is set/kept
             // at a standstill
             else
             {
-                speed = 0;
+                car[0].speed = 0;
             }
         }
 
@@ -213,15 +209,9 @@ int main()
         // then it needs to slow down
         for (int i = 0; i < N; i++)
         {
-            // User's car
-            if (i == 0 && speed > maxSpeed)
+            if (car[i].speed > car[i].maxSpeed)
             {
-                speed -= (dec / 4.0);
-            }
-            // Computer cars
-            else if (car[i].speed > car[i].maxSpeed)
-            {
-                car[i].speed -= (dec / 4.0);
+                car[i].speed -= (car[i].dec / 4.0);
             }
         }
         
@@ -229,20 +219,16 @@ int main()
         //
         // If the right arrow key is pressed and the car is moving, the car turns towards the
         // right at a rate relative to its speed
-        if (Right && speed != 0) 
+        if (Right && car[0].speed != 0) 
         {
-            angle += (turnSpeed * speed) / maxSpeed;
+            car[0].angle += (car[0].turnSpeed * car[0].speed) / car[0].maxSpeed;
         }
         // If the left arrow key is pressed and the car is moving, the car turns towards the
         // left at a rate relative to its speed
-        if (Left && speed != 0)
+        if (Left && car[0].speed != 0)
         {
-            angle -= (turnSpeed * speed) / maxSpeed;
+            car[0].angle -= (car[0].turnSpeed * car[0].speed) / car[0].maxSpeed;
         }
-        
-        // This is updating the user's car's variables
-        car[0].speed = speed;
-        car[0].angle = angle;
         
         // This is performing the actual moving of every single car
         for (int i = 0; i < N; i++)
@@ -341,65 +327,14 @@ int main()
                     dy = car[i].y - (*oIter)->getYCenter();
 
                     // Taking the car to the end of the boostpad
-                    car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
-                    car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
+                    car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * car[i].maxSpeed);
+                    car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * car[i].maxSpeed);
 
-                    // This is just to see if it's the user's car
-                    if (i == 0)
-                    {
-                        speed = maxSpeed + 6;
-                    }
-                    // If it's not the user's car, then this increases the computer's car
-                    // speed
-                    else
-                    {
-                        car[i].speed = maxSpeed + 6;
-                    }
+                    // Adjusting the car's speed
+                    car[i].speed = car[i].maxSpeed + 6;
                 }
             }
         }
-
-        /*
-        }
-        for (int i = 0; i < N; i++)
-        {
-            // This calculates the difference in the x and y coordinates of the car
-            // and the boostpad
-            int dx = car[i].x - 275;
-            int dy = car[i].y - 914;
-            //int dx = car[i].x - 250;
-            //int dy = car[i].y - 850;
-
-            // This loop goes while the difference in pixels squared between car i
-            // and the boostpad. Once the car is off the boostpad, the speed is no longer
-            // increased
-            while (dx * dx < 45 * 45 && dy * dy < 45 * 45)
-            {
-                // This calculates the difference in the x and y coordinates of the car
-                // and the boostpad
-                dx = car[i].x - 275;
-                dy = car[i].y - 914;
-                //dx = car[i].x - 250;
-                //dy = car[i].y - 850;
-
-                // Taking the car to the end of the boostpad
-                car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
-                car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
-
-                // This is just to see if it's the user's car
-                if (i == 0)
-                {
-                    speed = maxSpeed + 6;
-                }
-                // If it's not the user's car, then this increases the computer's car
-                // speed
-                else
-                {
-                    car[i].speed = maxSpeed + 6;
-                }
-            }
-        }
-        */
         
         // Look into
         app.clear(Color::White);
@@ -408,10 +343,8 @@ int main()
         // the user isn't near the left or top edge by using the values obtained above
         sBackground.setPosition(-offsetX, -offsetY);
         app.draw(sBackground);
-        // This makes sure the boostpad stay in their proper spot as well
-        //sBoostPad1.setPosition(-offsetX + boostpad1.getXCoordinate(), -offsetY + boostpad1.getYCoordinate());
-        //app.draw(sBoostPad1);
 
+        // This makes sure each of the sprites stays in its proper position
         std::vector<Sprite>::iterator sIter = sprites.begin();
         for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
         {

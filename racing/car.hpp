@@ -2,6 +2,9 @@
 // Devin Hopkins
 // 4190350
 
+#ifndef CAR_HPP
+#define CAR_HPP
+
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
@@ -13,7 +16,7 @@ class Car {
         //int points; // spots of the checkpoints
 
     public:
-        float x, y, speed, angle, maxSpeed;
+        float x, y, speed, angle, maxSpeed, turnSpeed, acc, dec;
 
         int n;
 
@@ -26,3 +29,5 @@ class Car {
         // This function tells the CPU cars where to go
         void findTarget();
 };
+
+#endif //CAR_HPP

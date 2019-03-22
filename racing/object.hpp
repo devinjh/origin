@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <SFML/Graphics.hpp>
+#include "car.hpp"
 
 struct Object {
 
@@ -13,8 +14,8 @@ struct Object {
     std::string imageLink;
 
     // These are for changing the speed of the car
-    virtual float changeXSpeed() const = 0;
-    virtual float changeYSpeed() const = 0;
+    virtual float changeXSpeed(Car const& c) const = 0;
+    virtual float changeYSpeed(Car const& c) const = 0;
 
     // Gets the x and y coordinate of the object's location
     virtual int getXCoordinate() const = 0;
@@ -49,17 +50,15 @@ struct BoostPad : Object {
         yCoordinate = yCoord;
         xScale = 0.25;
         yScale = 0.25;
-        //xScale = 256;
-        //yScale = 256;
         xPixels = 256;
         yPixels = 256;
     }
 
     // Changing the x speed
-    float changeXSpeed() const { return speedChangeX; }
+    float changeXSpeed(Car const& c) const { return (sin(c.angle) * c.speed) / (3 * c.maxSpeed); }
 
     // Changing the y speed
-    float changeYSpeed() const { return speedChangeY; }
+    float changeYSpeed(Car const& c) const { return (cos(c.angle) * c.speed) / (0 - 3 * c.maxSpeed); }
 
     // Returning the path for the image
     std::string getImageLink() const { return imageLink; }

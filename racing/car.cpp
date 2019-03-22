@@ -7,12 +7,15 @@
 Car::Car()
 {
     // Setting all the variables to a something
-    speed = 2;
-    maxSpeed = 2;
+    speed = 0;
     angle = 0;
-    n = 0;
-    x = 0;
+    maxSpeed = 12.0;
+    acc = 0.2;
+    dec = 0.3;
+    turnSpeed = 0.08;
     y = 0;
+    x = 0;
+    n = 0;
 }
 
 void Car::move()
