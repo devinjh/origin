@@ -30,6 +30,10 @@ struct Object {
     // Gets the hitbox of the object
     virtual int getXHitbox() const = 0;
     virtual int getYHitbox() const = 0;
+
+    // Gets the center of the object
+    virtual int getXCenter() const = 0;
+    virtual int getYCenter() const = 0;
 };
 
 struct BoostPad : Object {
@@ -43,8 +47,10 @@ struct BoostPad : Object {
         imageLink = nameOfImage;
         xCoordinate = xCoord;
         yCoordinate = yCoord;
-        xScale = 0.2;
-        yScale = 0.2;
+        xScale = 0.25;
+        yScale = 0.25;
+        //xScale = 256;
+        //yScale = 256;
         xPixels = 256;
         yPixels = 256;
     }
@@ -71,8 +77,14 @@ struct BoostPad : Object {
     float getYScale() const { return yScale; }
 
     // Gets the x pixel length for the hitbox
-    int getXHitbox() const { return 0; }
+    int getXHitbox() const { return (xPixels * xScale); }
 
     // Gets the y pixel length for the hitbox
-    int getYHitbox() const { return 0; }
+    int getYHitbox() const { return (yPixels * yScale); }
+
+    // Gets the x coordinate of the center of the object
+    int getXCenter() const { return (xCoordinate + ((xPixels * xScale) / 2)); }
+    
+    // Gets the y coordinate of the center of the object
+    int getYCenter() const { return (yCoordinate + ((yPixels * yScale) / 2)); }
 };

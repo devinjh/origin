@@ -41,28 +41,26 @@ int main()
     objects.push_back(new BoostPad("images/boostpad.png", 250, 850));
 
     // Testing only!!!!!
-    objects.push_back(new BoostPad("images/boostpad.png", 1000, 1000));
+    objects.push_back(new BoostPad("images/boostpad.png", 2880, 3648));
 
     // Creating sprites and putting them into their appropriate places to correlate with the objects
     Texture t;
+    // Original dimensions of object textures:
+    //
+    // Background: 1440x1824
+    // Car: 43x45
+    // Boostpad: 256x256
     for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
     {
         t.loadFromFile((*vIter)->getImageLink());
         t.setSmooth(true);
         Sprite st(t);
         st.scale((*vIter)->getXScale(), (*vIter)->getYScale());
+        //st.setScale((*vIter)->getXScale(), (*vIter)->getYScale());
         sprites.push_back(st);
     }
 
     // This makes the images into sprites
-    //
-    // Original dimensions:
-    // Background: 1440x1824
-    // Car: 43x45
-    // Boostpad: 256x256
-    std::cout << "    boost pixel: 256x256" << std::endl;
-    std::cout << "           goal: 275x914" << std::endl;
-    std::cout << "boost pixel (m): " << (int)(256 * 1.074) << "x" << (int)(256 * 3.57) << std::endl;
     Sprite sBackground(t1), sCar(t2);
     //Sprite sBoostPad1(t3);
 
@@ -321,6 +319,48 @@ int main()
         // This section is for collision with objects
         //
         // This loops compare each car with the objects
+        for (std::vector<Object*>::iterator oIter = objects.begin(); oIter != objects.end(); ++oIter)
+        {
+            for (int i = 0; i < N; i++)
+            {
+                // This calculates the difference in the x and y coordinates of the car
+                // and the object
+                int dx = car[i].x - (*oIter)->getXCenter();
+                int dy = car[i].y - (*oIter)->getYCenter();
+
+                // This loop goes while the difference the car is within the hitbox of the object.
+                // The variables are just to store the range of the hitboxes in both the x and the
+                // y direction
+                int xHitboxRange = (*oIter)->getXHitbox();
+                int yHitboxRange = (*oIter)->getYHitbox();
+                while (dx * dx < xHitboxRange * xHitboxRange && dy * dy < yHitboxRange * yHitboxRange)
+                {
+                    // This calculates the difference in the x and y coordinates of the car
+                    // and the object
+                    dx = car[i].x - (*oIter)->getXCenter();
+                    dy = car[i].y - (*oIter)->getYCenter();
+
+                    // Taking the car to the end of the boostpad
+                    car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * maxSpeed);
+                    car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * maxSpeed);
+
+                    // This is just to see if it's the user's car
+                    if (i == 0)
+                    {
+                        speed = maxSpeed + 6;
+                    }
+                    // If it's not the user's car, then this increases the computer's car
+                    // speed
+                    else
+                    {
+                        car[i].speed = maxSpeed + 6;
+                    }
+                }
+            }
+        }
+
+        /*
+        }
         for (int i = 0; i < N; i++)
         {
             // This calculates the difference in the x and y coordinates of the car
@@ -359,6 +399,7 @@ int main()
                 }
             }
         }
+        */
         
         // Look into
         app.clear(Color::White);
