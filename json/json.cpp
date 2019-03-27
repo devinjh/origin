@@ -285,6 +285,7 @@ parse_value(const char*& first, const char* last)
 Value* 
 parse(const std::string& str)
 {
+  //std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nstr: " << str << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" << std::endl;
   const char* first = str.c_str();
   const char* last = first + str.size();
   return parse_value(first, last);
@@ -466,14 +467,23 @@ Object::print(std::ostream& os, int level, bool inl, bool cont) const
     return;
   }
 
+  // TESTING ONLY
+  os << "in print: part 1\n";
+
   os << indent(level, inl) << '{' << '\n';
 
   // Be sure to indent for children.
   inl = false;
 
+  // TESTING ONLY
+  os << "in print: part 2\n";
+
   // Print the nested key/value pairs
   ++level;
   for (auto i = begin(); i != end(); ++i) {
+    // TESTING ONLY
+    os << "in print: part 3\n";
+
     value_type const& kv = *i;
     bool next = (std::next(i) != end());
     os << indent(level, inl) << kv.first << " : ";
@@ -482,7 +492,10 @@ Object::print(std::ostream& os, int level, bool inl, bool cont) const
   }
   --level;
 
-  os << indent(level, inl) << '}' << comma(cont);
+  // TESTING ONLY
+  os << "in print: part 4\n";
+
+  os << "test" << indent(level, inl) << '}' << comma(cont);
 }
 
 std::ostream&

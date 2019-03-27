@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   {
     std::string s2 = "";
     getline(infile, s2);
-    std::cout << s2 << std::endl;
+    //std::cout << s2 << std::endl;
 
     std::cout << "\n---\n" << std::endl;
 
@@ -30,4 +30,6 @@ int main(int argc, char* argv[])
   {
     std::cout << "did not open file" << std::endl;
   }
+
+  std::cout << "done" << std::endl;
 }
