@@ -467,23 +467,14 @@ Object::print(std::ostream& os, int level, bool inl, bool cont) const
     return;
   }
 
-  // TESTING ONLY
-  os << "in print: part 1\n";
-
   os << indent(level, inl) << '{' << '\n';
 
   // Be sure to indent for children.
   inl = false;
 
-  // TESTING ONLY
-  os << "in print: part 2\n";
-
   // Print the nested key/value pairs
   ++level;
   for (auto i = begin(); i != end(); ++i) {
-    // TESTING ONLY
-    os << "in print: part 3\n";
-
     value_type const& kv = *i;
     bool next = (std::next(i) != end());
     os << indent(level, inl) << kv.first << " : ";
@@ -492,16 +483,61 @@ Object::print(std::ostream& os, int level, bool inl, bool cont) const
   }
   --level;
 
-  // TESTING ONLY
-  os << "in print: part 4\n";
-
-  os << "test" << indent(level, inl) << '}' << comma(cont);
+  os << indent(level, inl) << '}' << comma(cont);
 }
 
 std::ostream&
 operator<<(std::ostream& os, Value const& v)
 {
   v.print(os, 0, false, false);
+  return os;
+}
+
+std::string getAuthorTitle(std::string str)
+{
+  return filterAuthorTitle(0, false, false, str);
+}
+
+std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
+{
+  std::string authorTitle = "";
+  // Handle empty objects.
+  if (str.length() == 0) {
+    authorTitle += "No JSON data given";
+    return authorTitle;
+  }
+
+  std::string extraStr = "";
+
+  while (str.find(" ") != -1)
+  {
+    extraStr = str.substr(0, str.find(" "));
+    str = str.substr(str.find(" ") + 1);
+
+    if (extraStr.compare("\"author\":") == 0)
+    {
+      authorTitle += extraStr;
+
+      extraStr = str.substr(0, str.find(" "));
+      str = str.substr(str.find(" ") + 1);
+
+      authorTitle += extraStr + "\n";
+    }
+
+    /*else if (extraStr.compare("\"title\":") == 0)
+    {
+      authorTitle += extraStr;
+
+      extraStr = str.substr(0, str.find("\""));
+      str = str.substr(str.find("\"") + 1);
+
+      authorTitle += extraStr + "\n";
+    }*/
+
+    //TESTING ONLY
+    //std::cout << ":" << extraStr << ":" << std::endl;
+  }
+  return authorTitle;
 }
 
 

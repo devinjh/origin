@@ -13,18 +13,18 @@ int main(int argc, char* argv[])
   infile.open("cpp.json");
   if (infile)
   {
-    std::string s2 = "";
-    getline(infile, s2);
-    //std::cout << s2 << std::endl;
+    std::string stringFromFile = "";
+    getline(infile, stringFromFile);
 
-    std::cout << "\n---\n" << std::endl;
-
-    std::istringstream inn(s2);
+    std::istringstream inn(stringFromFile);
     std::istreambuf_iterator<char> first(inn);
     std::istreambuf_iterator<char> last;
-    std::string s3(first, last);
-    json::Value* val = json::parse(s3);
-    std::cout << *val << '\n';
+    std::string stringToParse(first, last);
+    json::Value* val = json::parse(stringToParse);
+    //std::cout << "\nAll of the data:\n" << *val << "\n\n\n";
+
+    std::string authorTitleString = json::getAuthorTitle(stringFromFile);
+    std::cout << "\nThe author and title data:\n" << authorTitleString << "\n";
   }
   else
   {
