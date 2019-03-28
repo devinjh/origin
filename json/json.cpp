@@ -516,26 +516,23 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
 
     if (extraStr.compare("\"author\":") == 0)
     {
-      authorTitle += extraStr;
+      authorTitle += extraStr.substr(1, extraStr.length() - 3) + ": ";
 
-      extraStr = str.substr(0, str.find(" "));
+      extraStr = str.substr(1, str.find(" ") - 3);
       str = str.substr(str.find(" ") + 1);
 
       authorTitle += extraStr + "\n";
     }
 
-    /*else if (extraStr.compare("\"title\":") == 0)
+    else if (extraStr.compare("\"title\":") == 0)
     {
-      authorTitle += extraStr;
+      authorTitle += extraStr.substr(1, extraStr.length() - 3) + ": ";
 
-      extraStr = str.substr(0, str.find("\""));
+      extraStr = str.substr(str.find("\"") + 1, str.substr(str.find("\"") + 1).find("\""));
       str = str.substr(str.find("\"") + 1);
 
       authorTitle += extraStr + "\n";
-    }*/
-
-    //TESTING ONLY
-    //std::cout << ":" << extraStr << ":" << std::endl;
+    }
   }
   return authorTitle;
 }

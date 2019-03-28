@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     std::istreambuf_iterator<char> last;
     std::string stringToParse(first, last);
     json::Value* val = json::parse(stringToParse);
-    //std::cout << "\nAll of the data:\n" << *val << "\n\n\n";
+    std::cout << "\nAll of the data:\n" << *val << "\n\n\n";
 
     std::string authorTitleString = json::getAuthorTitle(stringFromFile);
     std::cout << "\nThe author and title data:\n" << authorTitleString << "\n";
@@ -30,6 +30,4 @@ int main(int argc, char* argv[])
   {
     std::cout << "did not open file" << std::endl;
   }
-
-  std::cout << "done" << std::endl;
 }
