@@ -8,7 +8,6 @@
 #include <cmath>
 #include <vector>
 #include <SFML/Graphics.hpp>
-
 #include "effect.hpp"
 
 class Car {
@@ -20,12 +19,11 @@ class Car {
 
     public:
         float x, y, speed, angle, maxSpeed, turnSpeed, acc, dec;
-
         int n;
 
         // This is to keep track of any effects the car might have
         // on itself
-        std::vector<Effect> effects;
+        std::vector<Effect*> effects{};
 
         // Constructor
         Car();
@@ -37,7 +35,7 @@ class Car {
         void findTarget();
 
         // Getting the effects
-        std::vector<Effect> getEffects();
+        std::vector<Effect*> getEffects();
 };
 
 #endif //CAR_HPP

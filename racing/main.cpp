@@ -8,10 +8,12 @@
 
 // Testing only
 #include <iostream>
+// Remove when done
 
 #include "car.hpp"
 #include "object.hpp"
-#include "effect.hpp"
+//#include "effect.hpp"
+//#include "car.hpp"
 
 using namespace sf;
 
@@ -354,6 +356,18 @@ int main()
                     {
                         car[i].speed = 0.5;
                     }
+
+                    // Seeing the object has an effect and, if so, adding it to the car
+                    if ((*oIter)->getEffectName().length() != 0)
+                    {
+                        std::vector<Effect*> effects = car[i].getEffects();
+                        std::string effectTitle = (*oIter)->getEffectName();
+                        for (std::vector<Effect*>::iterator eIter = effects.begin(); eIter != effects.end(); ++eIter)
+                        {
+                            // This attempts to turn on the status effect
+                            (*eIter)->turnOnEffect(effectTitle);
+                        }
+                    }
                 }
             }
         }
@@ -361,13 +375,15 @@ int main()
         // This loop checks for any effects on the cars and applies them appropriately
         for (int i = 0; i < N; ++i)
         {
-            std::vector<Effect> effects = car[i].getEffects();
-            for (int x = 0; x < effects.size(); ++x)
+            std::vector<Effect*> effects = car[i].getEffects();
+            for (std::vector<Effect*>::iterator eIter = effects.begin(); eIter != effects.end(); ++eIter)
             {
-                // This checks for the "mud" effect
-                if (effects.at(x).getEffectStatus())
+                // This checks for any effects
+                if ((*eIter)->getEffectStatus())
                 {
-                    std::cout << "MUD" << std::endl;
+                    // Adjusitng the car's speed as it needs to be adjusted based on the effect
+                    std::cout << "EFFECT IS ON!" << std::endl;
+                    car[i].speed = car[i].maxSpeed + (*eIter)->getMaxSpeedChange();
                 }
             }
         }

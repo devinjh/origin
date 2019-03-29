@@ -2,9 +2,13 @@
 // Devin Hopkins
 // 4190350
 
+#ifndef OBJECT_HPP
+#define OBJECT_HPP
+
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include "car.hpp"
+//#include "effect.hpp"
 
 struct Object {
 
@@ -38,6 +42,10 @@ struct Object {
     // Gets the center of the object
     virtual int getXCenter() const = 0;
     virtual int getYCenter() const = 0;
+
+    // If an effect needs to be put on the car, then this returns the name
+    // If there's no effect, returns ""
+    virtual std::string getEffectName() const = 0;
 };
 
 struct BoostPad : Object {
@@ -93,6 +101,10 @@ struct BoostPad : Object {
 
     // Gets the max speed change of the object
     int getMaxSpeedChange() const { return maxSpeedChange; }
+
+    // If an effect needs to be put on the car, then this returns the name
+    // If there's no effect, returns ""
+    std::string getEffectName() const { return ""; }
 };
 
 struct MudPit : Object {
@@ -148,4 +160,10 @@ struct MudPit : Object {
 
     // Gets the max speed change of the object
     int getMaxSpeedChange() const { return maxSpeedChange; }
+
+    // If an effect needs to be put on the car, then this returns the name
+    // If there's no effect, returns ""
+    std::string getEffectName() const { return "mud"; }
 };
+
+#endif // OBJECT_HPP
