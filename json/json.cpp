@@ -153,15 +153,17 @@ parse_string(const char*& first, const char* last, bool& at)
     return new String(start, first);
   }
 
-  // THIS WORKS, BUT MAKES IT PRINT WEIRD STUFF
-  --first;
-  String *test3a = new String(--first, ++first);
-  ++first;
-  std::string test3b = *test;
-  return test3a;
+  // This works, but prints seemingly random stuff
+  //return new String(first - 2, first - 1);
 
-  // THIS IS THE TESTING TO MAKE IT WORK BETTER
-  // to do
+  // This works, but prints the first character of each thing
+  return new String(start + 1, start + 2);
+
+  // TESTING - DOESN'T WORK CURRENTLY
+  //std::string dudString = "--";
+  //const char* dudStart = dudString.c_str();
+  //const char* dudLast = dudStart + dudString.size();
+  //return new String(dudStart, dudLast);
 }
 
 /// Parse a numeric value.
@@ -314,18 +316,6 @@ parse(const std::string& str)
   const char* last = first + str.size();
   return parse_value(first, last, at);
 }
-
-Value* parseAuthortitle(std::string const& str)
-{
-  bool at = false;
-  std::string atStr = str;
-  //atStr = getAuthorTitle(atStr);
-  //std::cout << "atStr\n" << atStr << "\n\n";
-  const char* first = atStr.c_str();
-  const char* last = first + atStr.size();
-  return parse_value(first, last, at);
-}
-
 
 int
 size(Value const* v)
@@ -528,29 +518,7 @@ operator<<(std::ostream& os, Value const& v)
   return os;
 }
 
-std::string getAuthorTitle(std::string str)
-{
-  /*
-  std::string toReturn = "{" + filterAuthorTitle(0, false, false, str);
-
-  // TESTING
-  std::cout << "toReturn length:" << toReturn.length() << ":" << std::endl;
-  std::cout << "toReturn:" << toReturn.substr(toReturn.length() - 2, 1) << ":" << std::endl;
-
-  if (toReturn.substr(toReturn.length() - 2, 1).compare(",") == 0)
-  {
-    // TESTING
-    std::cout << "it was true" << std::endl;
-    std::cout << "toReturn.substr(2235):" << toReturn.substr(2235) << ":\n";
-    //std::cout << "             modified:" << toReturn.substr(2235, toReturn.length() - 5) + toReturn.substr(toReturn.length() - 1) << ":\n";
-    std::cout << "             modified:" << toReturn.substr(2235, toReturn.length() - 5) << ":\n";
-    toReturn = toReturn.substr(0, toReturn.length() - 5) + toReturn.substr(toReturn.length() - 1);
-  }
-  return toReturn + "}";
-  */
-  return filterAuthorTitle(0, false, false, str);
-}
-
+/*
 std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
 {
   std::string authorTitle = "";
@@ -574,18 +542,11 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
       oneFound = true;
       authorTitle += "{";
 
-      // TESTING ONLY
-      //std::cout << "\n\nin author\n";
-
       extraStr = extraStr + " \"";
       authorTitle += extraStr;
 
-      //TESTING ONLY
-      //std::cout << extraStr;
-
       extraStr = str.substr(1, str.find(" "));
       str = str.substr(str.find(" ") + 1);
-
       //TESTING ONLY
       //std::cout << extraStr;
 
@@ -597,20 +558,11 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
       oneFound = true;
       authorTitle += "{";
 
-      // TESTING ONLY
-      //std::cout << "\n\nin title\n";
-
       extraStr += " ";
       authorTitle += extraStr;
 
-      //TESTING ONLY
-      //std::cout << extraStr;
-
       extraStr = str.substr(str.find("\""), str.substr(str.find("\"") + 1).find("\"") + 3);
       str = str.substr(str.find("\"") + 1);
-
-      //TESTING ONLY
-      //std::cout << extraStr;
 
       authorTitle += extraStr;
     }
@@ -622,6 +574,7 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
   }
   return authorTitle;
 }
+*/
 
 
 } // namespace json

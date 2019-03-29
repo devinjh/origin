@@ -25,11 +25,11 @@ int main(int argc, char* argv[])
     json::Value* val = json::parse(stringToParse);
     std::cout << "\nAll of the JSON data:\n" << *val << "\n\n\n";
 
-    std::string authorTitleString = json::getAuthorTitle(stringFromFile);
+    // This part works and gets the title and author in a nice little string, but I
+    // felt like it was cheating so it's commented out
+    //
+    //std::string authorTitleString = json::getAuthorTitle(stringFromFile);
     //std::cout << "\nPure author and title data:\n" << authorTitleString << "\n";
-
-    //json::Value* atVal = json::parseAuthortitle(stringToParse);
-    //std::cout << "\nJSON author and title data:\n" << *atVal << "\n";
   }
   else
   {
