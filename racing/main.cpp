@@ -11,6 +11,7 @@
 
 #include "car.hpp"
 #include "object.hpp"
+#include "effect.hpp"
 
 using namespace sf;
 
@@ -19,9 +20,6 @@ int main()
     // Look into
     RenderWindow app(VideoMode(640, 480), "Car Racing Game!");
 	app.setFramerateLimit(60);
-
-    // Testing only
-    BoostPad boostpad1{"images/boostpad.png", 250, 850};
 
     // Look into
     Texture t1, t2;
@@ -35,7 +33,15 @@ int main()
     std::vector<Sprite> sprites;
 
     // Creating objects in the race course and putting them into the objects vector
-    objects.push_back(new BoostPad("images/boostpad.png", 250, 900));
+    //
+    // Boostpads
+    //objects.push_back(new BoostPad("images/boostpad.png", 250, 900));
+    objects.push_back(new BoostPad("images/boostpad.png", 1290, 1500));
+    objects.push_back(new BoostPad("images/boostpad.png", 1290, 3300));
+    //
+    // Mudpits
+    objects.push_back(new MudPit("images/mud.jpg", 250, 900));
+    
 
     // Creating sprites and putting them into their appropriate places to correlate with the objects
     //
@@ -207,11 +213,21 @@ int main()
 
         // If a car is going above its maximum speed (meaning it just came off a boostpad)
         // then it needs to slow down
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < N; ++i)
         {
             if (car[i].speed > car[i].maxSpeed)
             {
                 car[i].speed -= (car[i].dec / 4.0);
+            }
+        }
+
+        // This section checks to see if a computer car is going slower than their max speed
+        // If they are, they must be sped up
+        for (int x = 1; x < N; ++x)
+        {
+            if (car[x].speed < car[x].maxSpeed)
+            {
+                car[x].speed += car[x].acc;
             }
         }
         
@@ -326,12 +342,32 @@ int main()
                     dx = car[i].x - (*oIter)->getXCenter();
                     dy = car[i].y - (*oIter)->getYCenter();
 
-                    // Taking the car to the end of the boostpad
-                    car[i].x += (sin(car[i].angle) * car[i].speed) / (3 * car[i].maxSpeed);
-                    car[i].y += (cos(car[i].angle) * car[i].speed) / (0 - 3 * car[i].maxSpeed);
+                    // If the object changes the car's speed, it's done here
+                    car[i].x += (*oIter)->changeXSpeed(car[i]);
+                    car[i].y += (*oIter)->changeYSpeed(car[i]);
 
-                    // Adjusting the car's speed
-                    car[i].speed = car[i].maxSpeed + 6;
+                    // Adjusting the car's max speed
+                    car[i].speed = car[i].maxSpeed + (*oIter)->getMaxSpeedChange();
+
+                    // Making sure the car's speed is greater than 0
+                    if (car[i].speed < 0)
+                    {
+                        car[i].speed = 0.5;
+                    }
+                }
+            }
+        }
+
+        // This loop checks for any effects on the cars and applies them appropriately
+        for (int i = 0; i < N; ++i)
+        {
+            std::vector<Effect> effects = car[i].getEffects();
+            for (int x = 0; x < effects.size(); ++x)
+            {
+                // This checks for the "mud" effect
+                if (effects.at(x).getEffectStatus())
+                {
+                    std::cout << "MUD" << std::endl;
                 }
             }
         }

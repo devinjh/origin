@@ -18,6 +18,16 @@ Car::Car()
     n = 0;
 }
 
+std::vector<Effect> Car::getEffects()
+{
+    return effects;
+}
+
+void addEffect(std::string str)
+{
+    //
+}
+
 void Car::move()
 {
     // Adjusting how fast and what angle the car is moving

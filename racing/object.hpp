@@ -10,7 +10,7 @@ struct Object {
 
     // Variables necessary for the objects
     float speedChangeX, speedChangeY, xScale, yScale;
-    int xCoordinate, yCoordinate, xPixels, yPixels;
+    int xCoordinate, yCoordinate, xPixels, yPixels, maxSpeedChange;
     std::string imageLink;
 
     // These are for changing the speed of the car
@@ -23,6 +23,9 @@ struct Object {
 
     // Gets the image link of the object
     virtual std::string getImageLink() const = 0;
+
+    // Gets the max speed change of the object
+    virtual int getMaxSpeedChange() const = 0;
 
     // Gets the x and y scale the texture needs to be scaled by
     virtual float getXScale() const = 0;
@@ -52,6 +55,7 @@ struct BoostPad : Object {
         yScale = 0.25;
         xPixels = 256;
         yPixels = 256;
+        maxSpeedChange = 7;
     }
 
     // Changing the x speed
@@ -86,4 +90,62 @@ struct BoostPad : Object {
     
     // Gets the y coordinate of the center of the object
     int getYCenter() const { return (yCoordinate + ((yPixels * yScale) / 2)); }
+
+    // Gets the max speed change of the object
+    int getMaxSpeedChange() const { return maxSpeedChange; }
+};
+
+struct MudPit : Object {
+
+    // Constructor
+    MudPit(std::string nameOfImage, int xCoord, int yCoord)
+    {
+        // All of the variables required for struct Object
+        speedChangeX = 0.5;
+        speedChangeY = 0.5;
+        imageLink = nameOfImage;
+        xCoordinate = xCoord;
+        yCoordinate = yCoord;
+        xScale = 0.25;
+        yScale = 0.25;
+        xPixels = 234;
+        yPixels = 215;
+        maxSpeedChange = -5;
+    }
+
+    // Changing the x speed
+    float changeXSpeed(Car const& c) const { return (sin(c.angle) * c.speed) / (c.maxSpeed); }
+
+    // Changing the y speed
+    float changeYSpeed(Car const& c) const { return (cos(c.angle) * c.speed) / (0 - c.maxSpeed); }
+
+    // Returning the path for the image
+    std::string getImageLink() const { return imageLink; }
+
+    // Returning the x coordinate of the boostpad
+    int getXCoordinate() const { return xCoordinate; }
+
+    // Returning the y coordinate of the boostpad
+    int getYCoordinate() const { return yCoordinate; }
+
+    // Gets the x scale the boostpad needs to be scaled by
+    float getXScale() const { return xScale; }
+    
+    // Gets the y scale the boostpad needs to be scaled by
+    float getYScale() const { return yScale; }
+
+    // Gets the x pixel length for the hitbox
+    int getXHitbox() const { return (xPixels * xScale); }
+
+    // Gets the y pixel length for the hitbox
+    int getYHitbox() const { return (yPixels * yScale); }
+
+    // Gets the x coordinate of the center of the object
+    int getXCenter() const { return (xCoordinate + ((xPixels * xScale) / 2)); }
+    
+    // Gets the y coordinate of the center of the object
+    int getYCenter() const { return (yCoordinate + ((yPixels * yScale) / 2)); }
+
+    // Gets the max speed change of the object
+    int getMaxSpeedChange() const { return maxSpeedChange; }
 };

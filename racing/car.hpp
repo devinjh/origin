@@ -6,7 +6,10 @@
 #define CAR_HPP
 
 #include <cmath>
+#include <vector>
 #include <SFML/Graphics.hpp>
+
+#include "effect.hpp"
 
 class Car {
     private:
@@ -20,6 +23,10 @@ class Car {
 
         int n;
 
+        // This is to keep track of any effects the car might have
+        // on itself
+        std::vector<Effect> effects;
+
         // Constructor
         Car();
 
@@ -28,6 +35,9 @@ class Car {
 
         // This function tells the CPU cars where to go
         void findTarget();
+
+        // Getting the effects
+        std::vector<Effect> getEffects();
 };
 
 #endif //CAR_HPP
