@@ -158,7 +158,9 @@ namespace json
 
   Value* parse(std::string const& str);
 
-  // MAYBE??? TESTING CURRENTLY
+  Value* parseAuthortitle(std::string const& str);
+
+  // For strings
   std::string getAuthorTitle(std::string str);
   std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str);
 

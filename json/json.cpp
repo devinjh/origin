@@ -99,7 +99,7 @@ struct space_guard
 };
 
 /// Parse a value from a range of characters.
-Value* parse_value(const char*& first, const char* last);
+Value* parse_value(const char*& first, const char* last, bool& at);
 
 /// Parse the true value.
 Bool*
@@ -125,9 +125,9 @@ parse_null(const char*& first, const char* last)
   return new Null();
 }
 
-/// Parse a string value.
+// Parse a string value
 String*
-parse_string(const char*& first, const char* last)
+parse_string(const char*& first, const char* last, bool& at)
 {
   const char* start = first++;
   while (!is_eof(first, last) && *first != '"') {
@@ -137,7 +137,31 @@ parse_string(const char*& first, const char* last)
   }
   assert(*first == '"');
   ++first;
-  return new String(start, first);
+  
+  String *test = new String(start, first);
+  std::string test2 = *test;
+  if ((!(test2.compare("\"author\"") != 0 && test2.compare("\"title\"") != 0)) || at)
+  {
+    if (at)
+    {
+      at = false;
+    }
+    else
+    {
+      at = true;
+    }
+    return new String(start, first);
+  }
+
+  // THIS WORKS, BUT MAKES IT PRINT WEIRD STUFF
+  --first;
+  String *test3a = new String(--first, ++first);
+  ++first;
+  std::string test3b = *test;
+  return test3a;
+
+  // THIS IS THE TESTING TO MAKE IT WORK BETTER
+  // to do
 }
 
 /// Parse a numeric value.
@@ -160,7 +184,7 @@ parse_number(const char*& first, const char* last)
 
 /// Parse an array.
 Array*
-parse_array(const char*& first, const char* last)
+parse_array(const char*& first, const char* last, bool& at)
 {
   // Pre-allocate the array.
   Array* arr = new Array();
@@ -177,7 +201,7 @@ parse_array(const char*& first, const char* last)
   // Parse a sequence of comma delimited values.
   while (true) {
     // Parse and save the value.
-    Value* v = parse_value(first, last);
+    Value* v = parse_value(first, last, at);
     arr->push_back(v);
 
     if (first == last)
@@ -198,15 +222,15 @@ parse_array(const char*& first, const char* last)
 /// Parse a key. This simply parses a string, ensuring that surrounding
 /// spaces are skipped.
 String*
-parse_key(const char*& first, const char* last)
+parse_key(const char*& first, const char* last, bool& at)
 {
   space_guard g(first, last);
-  return parse_string(first, last);
+  return parse_string(first, last, at);
 }
 
 /// Parse an object.
 Object*
-parse_object(const char*& first, const char* last)
+parse_object(const char*& first, const char* last, bool& at)
 {
   // Pre-allocate the objet.
   Object* obj = new Object();
@@ -223,7 +247,7 @@ parse_object(const char*& first, const char* last)
   // Parse a sequence of comma delimited values.
   while (true) {
     // Parse the key.
-    String* k = parse_key(first, last);
+    String* k = parse_key(first, last, at);
 
     if (first == last)
       throw std::runtime_error("invalid object");
@@ -231,7 +255,7 @@ parse_object(const char*& first, const char* last)
       throw std::runtime_error("expected ':'");
     ++first;
 
-    Value* v = parse_value(first, last);
+    Value* v = parse_value(first, last, at);
 
     obj->emplace(*k, v);
 
@@ -252,7 +276,7 @@ parse_object(const char*& first, const char* last)
 
 /// The value parsed depends on the current character.
 Value*
-parse_value(const char*& first, const char* last)
+parse_value(const char*& first, const char* last, bool& at)
 {
   if (is_eof(first, last))
     return nullptr;
@@ -268,11 +292,11 @@ parse_value(const char*& first, const char* last)
     case 'n':
       return parse_null(first, last);
     case '"':
-      return parse_string(first, last);
+      return parse_string(first, last, at);
     case '[':
-      return parse_array(first, last);
+      return parse_array(first, last, at);
     case '{':
-      return parse_object(first, last);
+      return parse_object(first, last, at);
     case '0': case '1': case '2': case '3': case '4': 
     case '5': case '6': case '7': case '8': case '9':
     case '-':
@@ -285,10 +309,21 @@ parse_value(const char*& first, const char* last)
 Value* 
 parse(const std::string& str)
 {
-  //std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nstr: " << str << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" << std::endl;
+  bool at = false;
   const char* first = str.c_str();
   const char* last = first + str.size();
-  return parse_value(first, last);
+  return parse_value(first, last, at);
+}
+
+Value* parseAuthortitle(std::string const& str)
+{
+  bool at = false;
+  std::string atStr = str;
+  //atStr = getAuthorTitle(atStr);
+  //std::cout << "atStr\n" << atStr << "\n\n";
+  const char* first = atStr.c_str();
+  const char* last = first + atStr.size();
+  return parse_value(first, last, at);
 }
 
 
@@ -495,6 +530,24 @@ operator<<(std::ostream& os, Value const& v)
 
 std::string getAuthorTitle(std::string str)
 {
+  /*
+  std::string toReturn = "{" + filterAuthorTitle(0, false, false, str);
+
+  // TESTING
+  std::cout << "toReturn length:" << toReturn.length() << ":" << std::endl;
+  std::cout << "toReturn:" << toReturn.substr(toReturn.length() - 2, 1) << ":" << std::endl;
+
+  if (toReturn.substr(toReturn.length() - 2, 1).compare(",") == 0)
+  {
+    // TESTING
+    std::cout << "it was true" << std::endl;
+    std::cout << "toReturn.substr(2235):" << toReturn.substr(2235) << ":\n";
+    //std::cout << "             modified:" << toReturn.substr(2235, toReturn.length() - 5) + toReturn.substr(toReturn.length() - 1) << ":\n";
+    std::cout << "             modified:" << toReturn.substr(2235, toReturn.length() - 5) << ":\n";
+    toReturn = toReturn.substr(0, toReturn.length() - 5) + toReturn.substr(toReturn.length() - 1);
+  }
+  return toReturn + "}";
+  */
   return filterAuthorTitle(0, false, false, str);
 }
 
@@ -511,27 +564,60 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
 
   while (str.find(" ") != -1)
   {
+    bool oneFound = false;
+
     extraStr = str.substr(0, str.find(" "));
     str = str.substr(str.find(" ") + 1);
 
     if (extraStr.compare("\"author\":") == 0)
     {
-      authorTitle += extraStr.substr(1, extraStr.length() - 3) + ": ";
+      oneFound = true;
+      authorTitle += "{";
 
-      extraStr = str.substr(1, str.find(" ") - 3);
+      // TESTING ONLY
+      //std::cout << "\n\nin author\n";
+
+      extraStr = extraStr + " \"";
+      authorTitle += extraStr;
+
+      //TESTING ONLY
+      //std::cout << extraStr;
+
+      extraStr = str.substr(1, str.find(" "));
       str = str.substr(str.find(" ") + 1);
 
-      authorTitle += extraStr + "\n";
+      //TESTING ONLY
+      //std::cout << extraStr;
+
+      authorTitle += extraStr;
     }
 
     else if (extraStr.compare("\"title\":") == 0)
     {
-      authorTitle += extraStr.substr(1, extraStr.length() - 3) + ": ";
+      oneFound = true;
+      authorTitle += "{";
 
-      extraStr = str.substr(str.find("\"") + 1, str.substr(str.find("\"") + 1).find("\""));
+      // TESTING ONLY
+      //std::cout << "\n\nin title\n";
+
+      extraStr += " ";
+      authorTitle += extraStr;
+
+      //TESTING ONLY
+      //std::cout << extraStr;
+
+      extraStr = str.substr(str.find("\""), str.substr(str.find("\"") + 1).find("\"") + 3);
       str = str.substr(str.find("\"") + 1);
 
-      authorTitle += extraStr + "\n";
+      //TESTING ONLY
+      //std::cout << extraStr;
+
+      authorTitle += extraStr;
+    }
+
+    if (oneFound)
+    {
+      authorTitle += "}";
     }
   }
   return authorTitle;
