@@ -33,16 +33,19 @@ int main()
     // Making two parallel vectors to contain all of the race track's objects
     std::vector<Object*> objects;
     std::vector<Sprite> sprites;
+    std::vector<Texture> textures;
 
     // Creating objects in the race course and putting them into the objects vector
     //
     // Boostpads
-    //objects.push_back(new BoostPad("images/boostpad.png", 250, 900));
-    objects.push_back(new BoostPad("images/boostpad.png", 1290, 1500));
-    objects.push_back(new BoostPad("images/boostpad.png", 1290, 3300));
+    objects.push_back(new BoostPad("images/boostpad.png", 250, 900)); // By start/finish line
+    objects.push_back(new BoostPad("images/boostpad.png", 1290, 1500)); // In long corridor between the two
+                                                                        // outside parts of the track
+    objects.push_back(new BoostPad("images/boostpad.png", 1290, 3300)); // In the last long corridor before
+                                                                        // the start/finish line
     //
     // Mudpits
-    objects.push_back(new MudPit("images/mud.jpg", 250, 900));
+    objects.push_back(new MudPit("images/mud.jpg", 253, 840));
     
 
     // Creating sprites and putting them into their appropriate places to correlate with the objects
@@ -52,26 +55,44 @@ int main()
     // Background: 1440x1824
     // Car: 43x45
     // Boostpad: 256x256
-    Texture t;
-    for (std::vector<Object*>::iterator vIter = objects.begin(); vIter != objects.end(); ++vIter)
+    //
+    // This makes sure each object has their own texture
+    for (int x = 0; x < objects.size(); ++x)
     {
-        // Putting an image with the texture and making it smooth
-        t.loadFromFile((*vIter)->getImageLink());
-        t.setSmooth(true);
+        Texture t;
+        textures.push_back(t);
+    }
+    // These extra brackets are just so the iterators aren't carried around in memory the rest
+    // of the game
+    {
+        // Creating iterators for each of the vectors
+        std::vector<Object*>::iterator vIter = objects.begin();
+        std::vector<Texture>::iterator tIter = textures.begin();
+        
+        // Looping through making sure each object gets their appropriate texture and sprite
+        while (vIter != objects.end() && tIter != textures.end())
+        {
+            // Putting an image with the texture and making it smooth
+            (*tIter).loadFromFile((*vIter)->getImageLink());
+            (*tIter).setSmooth(true);
 
-        // Setting the sprite wuth the texture
-        Sprite st(t);
+            // Setting the sprite wuth the texture
+            Sprite st((*tIter));
 
-        // Making the sprite the same scale as the object
-        st.scale((*vIter)->getXScale(), (*vIter)->getYScale());
+            // Making the sprite the same scale as the object
+            st.scale((*vIter)->getXScale(), (*vIter)->getYScale());
 
-        // Pushing the sprite onto the vector
-        sprites.push_back(st);
+            // Pushing the sprite onto the vector
+            sprites.push_back(st);
+
+            // Making sure both iterators get iterated
+            ++vIter;
+            ++tIter;
+        }
     }
 
     // This makes the images into sprites
     Sprite sBackground(t1), sCar(t2);
-    //Sprite sBoostPad1(t3);
 
     // Setting the scale of the images
     //
@@ -84,8 +105,8 @@ int main()
     float R = 22;
 
     // This is the number of cars
-    // Normal amount is 5 cars
-    const int N = 5;
+    const int N = 5; // This is the normal number
+    //const int N = 1; // This is my testing number
 
     // Making an array to contain each car
     Car car[N];
@@ -375,15 +396,18 @@ int main()
         // This loop checks for any effects on the cars and applies them appropriately
         for (int i = 0; i < N; ++i)
         {
+            // This creates a vector with all of the effects in it
             std::vector<Effect*> effects = car[i].getEffects();
             for (std::vector<Effect*>::iterator eIter = effects.begin(); eIter != effects.end(); ++eIter)
             {
                 // This checks for any effects
                 if ((*eIter)->getEffectStatus())
                 {
-                    // Adjusitng the car's speed as it needs to be adjusted based on the effect
-                    std::cout << "EFFECT IS ON!" << std::endl;
+                    // Adjusting the car's speed as it needs to be adjusted based on the effect
                     car[i].speed = car[i].maxSpeed + (*eIter)->getMaxSpeedChange();
+
+                    // This checks to see if the effect needs to be turned off
+                    (*eIter)->timeOut();
                 }
             }
         }
