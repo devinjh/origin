@@ -166,7 +166,7 @@ int main()
         {
             Down = 1;
         }
-        // Left arow key
+        // Left arrow key
         if (Keyboard::isKeyPressed(Keyboard::Left))
         {
             Left = 1;
