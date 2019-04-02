@@ -159,7 +159,7 @@ namespace json
   Value* parse(std::string const& str);
 
   // For strings
-  //std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str);
+  std::string filterAuthorTitle(std::string str);
 
 
   // Returns the size (number of nodes) in the value.

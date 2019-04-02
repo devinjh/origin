@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
     std::string stringFromFile = "";
     getline(infile, stringFromFile);
 
+    // This is if you want to see the JSON code without any modifications
     //std::cout << "Pure data:\n" << stringFromFile << "\n";
 
     std::istringstream inn(stringFromFile);
@@ -27,8 +28,9 @@ int main(int argc, char* argv[])
 
     // This part works and gets the title and author in a nice little string, but I
     // felt like it was cheating so it's commented out
+    // Feel free to take the comment out. It works excellent!
     //
-    //std::string authorTitleString = json::getAuthorTitle(stringFromFile);
+    //std::string authorTitleString = json::filterAuthorTitle(stringFromFile);
     //std::cout << "\nPure author and title data:\n" << authorTitleString << "\n";
   }
   else

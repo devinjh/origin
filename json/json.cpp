@@ -518,8 +518,7 @@ operator<<(std::ostream& os, Value const& v)
   return os;
 }
 
-/*
-std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
+std::string filterAuthorTitle(std::string str)
 {
   std::string authorTitle = "";
   // Handle empty objects.
@@ -540,15 +539,12 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
     if (extraStr.compare("\"author\":") == 0)
     {
       oneFound = true;
-      authorTitle += "{";
 
       extraStr = extraStr + " \"";
       authorTitle += extraStr;
 
       extraStr = str.substr(1, str.find(" "));
       str = str.substr(str.find(" ") + 1);
-      //TESTING ONLY
-      //std::cout << extraStr;
 
       authorTitle += extraStr;
     }
@@ -556,7 +552,6 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
     else if (extraStr.compare("\"title\":") == 0)
     {
       oneFound = true;
-      authorTitle += "{";
 
       extraStr += " ";
       authorTitle += extraStr;
@@ -569,13 +564,11 @@ std::string filterAuthorTitle(int level, bool inl, bool cont, std::string str)
 
     if (oneFound)
     {
-      authorTitle += "}";
+      authorTitle += "\n";
     }
   }
   return authorTitle;
 }
-*/
-
 
 } // namespace json
 
