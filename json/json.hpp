@@ -156,7 +156,7 @@ namespace json
 
   // Functions
 
-  Value* parse(std::string const& str);
+  Value* parse(std::vector<std::string>& atVector, std::string const& str);
 
   // For strings
   std::string filterAuthorTitle(std::string str);

@@ -99,7 +99,7 @@ struct space_guard
 };
 
 /// Parse a value from a range of characters.
-Value* parse_value(const char*& first, const char* last, bool& at);
+Value* parse_value(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at);
 
 /// Parse the true value.
 Bool*
@@ -127,7 +127,7 @@ parse_null(const char*& first, const char* last)
 
 // Parse a string value
 String*
-parse_string(const char*& first, const char* last, bool& at)
+parse_string(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at)
 {
   const char* start = first++;
   while (!is_eof(first, last) && *first != '"') {
@@ -150,6 +150,11 @@ parse_string(const char*& first, const char* last, bool& at)
     {
       at = true;
     }
+
+    //std::string toAddToVector = new std::string(start, first);
+    //atVector.push_back(new std::string(start, first)); // Doesn't work
+    atVector.push_back(test2);
+
     return new String(start, first);
   }
 
@@ -186,7 +191,7 @@ parse_number(const char*& first, const char* last)
 
 /// Parse an array.
 Array*
-parse_array(const char*& first, const char* last, bool& at)
+parse_array(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at)
 {
   // Pre-allocate the array.
   Array* arr = new Array();
@@ -203,7 +208,7 @@ parse_array(const char*& first, const char* last, bool& at)
   // Parse a sequence of comma delimited values.
   while (true) {
     // Parse and save the value.
-    Value* v = parse_value(first, last, at);
+    Value* v = parse_value(atVector, first, last, at);
     arr->push_back(v);
 
     if (first == last)
@@ -224,15 +229,15 @@ parse_array(const char*& first, const char* last, bool& at)
 /// Parse a key. This simply parses a string, ensuring that surrounding
 /// spaces are skipped.
 String*
-parse_key(const char*& first, const char* last, bool& at)
+parse_key(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at)
 {
   space_guard g(first, last);
-  return parse_string(first, last, at);
+  return parse_string(atVector, first, last, at);
 }
 
 /// Parse an object.
 Object*
-parse_object(const char*& first, const char* last, bool& at)
+parse_object(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at)
 {
   // Pre-allocate the objet.
   Object* obj = new Object();
@@ -249,7 +254,7 @@ parse_object(const char*& first, const char* last, bool& at)
   // Parse a sequence of comma delimited values.
   while (true) {
     // Parse the key.
-    String* k = parse_key(first, last, at);
+    String* k = parse_key(atVector, first, last, at);
 
     if (first == last)
       throw std::runtime_error("invalid object");
@@ -257,7 +262,7 @@ parse_object(const char*& first, const char* last, bool& at)
       throw std::runtime_error("expected ':'");
     ++first;
 
-    Value* v = parse_value(first, last, at);
+    Value* v = parse_value(atVector, first, last, at);
 
     obj->emplace(*k, v);
 
@@ -278,7 +283,7 @@ parse_object(const char*& first, const char* last, bool& at)
 
 /// The value parsed depends on the current character.
 Value*
-parse_value(const char*& first, const char* last, bool& at)
+parse_value(std::vector<std::string>& atVector, const char*& first, const char* last, bool& at)
 {
   if (is_eof(first, last))
     return nullptr;
@@ -294,11 +299,11 @@ parse_value(const char*& first, const char* last, bool& at)
     case 'n':
       return parse_null(first, last);
     case '"':
-      return parse_string(first, last, at);
+      return parse_string(atVector, first, last, at);
     case '[':
-      return parse_array(first, last, at);
+      return parse_array(atVector, first, last, at);
     case '{':
-      return parse_object(first, last, at);
+      return parse_object(atVector, first, last, at);
     case '0': case '1': case '2': case '3': case '4': 
     case '5': case '6': case '7': case '8': case '9':
     case '-':
@@ -309,12 +314,12 @@ parse_value(const char*& first, const char* last, bool& at)
 }
 
 Value* 
-parse(const std::string& str)
+parse(std::vector<std::string>& atVector, const std::string& str)
 {
   bool at = false;
   const char* first = str.c_str();
   const char* last = first + str.size();
-  return parse_value(first, last, at);
+  return parse_value(atVector, first, last, at);
 }
 
 int
