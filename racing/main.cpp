@@ -46,6 +46,9 @@ int main()
     //
     // Mudpits
     objects.push_back(new MudPit("images/mud.jpg", 253, 840));
+    //
+    // Finish Line
+    objects.push_back(new Finish_Line("images/finish_line.jpg", 207, 1350));
     
 
     // Creating sprites and putting them into their appropriate places to correlate with the objects

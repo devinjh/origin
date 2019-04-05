@@ -166,4 +166,63 @@ struct MudPit : Object {
     std::string getEffectName() const { return "mud"; }
 };
 
+struct Finish_Line : Object {
+
+    // Constructor
+    Finish_Line(std::string nameOfImage, int xCoord, int yCoord)
+    {
+        // All of the variables required for struct Object
+        speedChangeX = 0.5;
+        speedChangeY = 0.5;
+        imageLink = nameOfImage;
+        xCoordinate = xCoord;
+        yCoordinate = yCoord;
+        xScale = 1.2;
+        yScale = 1;
+        xPixels = 186;
+        yPixels = 18;
+        maxSpeedChange = -5;
+    }
+
+    // Changing the x speed
+    float changeXSpeed(Car const& c) const { return (sin(c.angle) * c.speed) / (c.maxSpeed); }
+
+    // Changing the y speed
+    float changeYSpeed(Car const& c) const { return (cos(c.angle) * c.speed) / (0 - c.maxSpeed); }
+
+    // Returning the path for the image
+    std::string getImageLink() const { return imageLink; }
+
+    // Returning the x coordinate of the boostpad
+    int getXCoordinate() const { return xCoordinate; }
+
+    // Returning the y coordinate of the boostpad
+    int getYCoordinate() const { return yCoordinate; }
+
+    // Gets the x scale the boostpad needs to be scaled by
+    float getXScale() const { return xScale; }
+    
+    // Gets the y scale the boostpad needs to be scaled by
+    float getYScale() const { return yScale; }
+
+    // Gets the x pixel length for the hitbox
+    int getXHitbox() const { return (xPixels * xScale); }
+
+    // Gets the y pixel length for the hitbox
+    int getYHitbox() const { return (yPixels * yScale); }
+
+    // Gets the x coordinate of the center of the object
+    int getXCenter() const { return (xCoordinate + ((xPixels * xScale) / 2)); }
+    
+    // Gets the y coordinate of the center of the object
+    int getYCenter() const { return (yCoordinate + ((yPixels * yScale) / 2)); }
+
+    // Gets the max speed change of the object
+    int getMaxSpeedChange() const { return maxSpeedChange; }
+
+    // If an effect needs to be put on the car, then this returns the name
+    // If there's no effect, returns ""
+    std::string getEffectName() const { return ""; }
+};
+
 #endif // OBJECT_HPP
