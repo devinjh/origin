@@ -181,7 +181,7 @@ struct Finish_Line : Object {
         yScale = 1;
         xPixels = 186;
         yPixels = 18;
-        maxSpeedChange = -5;
+        maxSpeedChange = 0;
     }
 
     // Changing the x speed
@@ -222,7 +222,7 @@ struct Finish_Line : Object {
 
     // If an effect needs to be put on the car, then this returns the name
     // If there's no effect, returns ""
-    std::string getEffectName() const { return ""; }
+    std::string getEffectName() const { return "finish"; }
 };
 
 #endif // OBJECT_HPP

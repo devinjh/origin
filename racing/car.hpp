@@ -19,7 +19,7 @@ class Car {
 
     public:
         float x, y, speed, angle, maxSpeed, turnSpeed, acc, dec;
-        int n;
+        int n, lap;
 
         // This is to keep track of any effects the car might have
         // on itself

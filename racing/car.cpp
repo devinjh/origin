@@ -16,9 +16,11 @@ Car::Car()
     y = 0;
     x = 0;
     n = 0;
+    lap = 0;
     
     // Adding all of the effects to the effect array
     effects.push_back(new Mud());
+    effects.push_back(new Finish());
 }
 
 std::vector<Effect*> Car::getEffects()

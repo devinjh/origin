@@ -8,7 +8,7 @@
 //#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <time.h>
-//#include <iostream>
+#include <iostream>
 //#include "car.hpp"
 //#include "object.hpp"
 
@@ -33,7 +33,7 @@ struct Effect {
         // If the difference in the time from when the car came under the effect
         // is equal to the time the ffect should last, then it's turned off
         time_t end = time(0);
-        if (difftime(end, start) == effectTime)
+        if (difftime(end, start) >= effectTime)
         {
             inEffect = false;
         }
@@ -64,6 +64,29 @@ struct Mud : Effect {
 
     // Changes the speed at which the car is moving
     int getMaxSpeedChange() const { return -5; }
+};
+
+struct Finish : Effect {
+
+    Finish()
+    {
+        inEffect = false;
+        effectName = "finish";
+        effectTime = 2;
+    }
+
+    void turnOnEffect(std::string effectToTurnOn)
+    {
+        // If the effect name matches this effect's name, then it's turned on
+        if (effectToTurnOn.compare(effectName) == 0)
+        {
+            inEffect = true;
+            start = time(0);
+        }
+    }
+
+    // Changes the speed at which the car is moving
+    int getMaxSpeedChange() const { return 0; }
 };
 
 #endif //EFFECT_HPP
