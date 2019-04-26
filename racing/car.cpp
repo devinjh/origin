@@ -17,6 +17,9 @@ Car::Car()
     x = 0;
     n = 0;
     lap = 0;
+    checkOne = false;
+    checkTwo = false;
+    checkThree= true;
     
     // Adding all of the effects to the effect array
     effects.push_back(new Mud());
@@ -26,11 +29,6 @@ Car::Car()
 std::vector<Effect*> Car::getEffects()
 {
     return effects;
-}
-
-void addEffect(std::string str)
-{
-    //
 }
 
 void Car::move()

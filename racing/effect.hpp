@@ -24,8 +24,11 @@ struct Effect {
     // of the effect)
     virtual void turnOnEffect(std::string effectToTurnOn) = 0;
 
-    // Changes the soeed at which the car is moving
+    // Changes the speed at which the car is moving
     virtual int getMaxSpeedChange() const = 0;
+    
+    // Changes the lap count of the car
+    virtual int getLapChange() const = 0;
 
     // Tell whether the effect should be turned off or not based on time
     virtual void timeOut()
@@ -64,6 +67,9 @@ struct Mud : Effect {
 
     // Changes the speed at which the car is moving
     int getMaxSpeedChange() const { return -5; }
+
+    // Changes the lap count of the car
+    int getLapChange() const { return 0; }
 };
 
 struct Finish : Effect {
@@ -87,6 +93,9 @@ struct Finish : Effect {
 
     // Changes the speed at which the car is moving
     int getMaxSpeedChange() const { return 0; }
+
+    // Changes the lap count of the car
+    int getLapChange() const { return 1; }
 };
 
 #endif //EFFECT_HPP

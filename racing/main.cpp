@@ -10,13 +10,27 @@
 #include <iostream>
 // Remove when done
 
-#include "car.hpp"
-#include "object.hpp"
-//#include "effect.hpp"
 //#include "car.hpp"
+//#include "object.hpp"
+#include "gameEvents.hpp"
 
 using namespace sf;
 
+int main()
+{
+    racing_game app{};
+
+    event_source events(app.window);
+
+    events.listen(app);
+
+    while(app.is_open())
+    {
+        events.poll();
+    }
+}
+
+/*
 int main()
 {
     // Look into
@@ -108,8 +122,8 @@ int main()
     float R = 22;
 
     // This is the number of cars
-    const int N = 5; // This is the normal number
-    //const int N = 1; // This is my testing number
+    //const int N = 5; // This is the normal number
+    const int N = 1; // This is my testing number
 
     // Making an array to contain each car
     Car car[N];
@@ -409,6 +423,9 @@ int main()
                     // Adjusting the car's speed as it needs to be adjusted based on the effect
                     car[i].speed = car[i].maxSpeed + (*eIter)->getMaxSpeedChange();
 
+                    // Adjusting the lap count of the car
+                    car[i].lap += (*eIter)->getLapChange();
+
                     // This checks to see if the effect needs to be turned off
                     (*eIter)->timeOut();
                 }
@@ -451,3 +468,4 @@ int main()
 
     return 0;
 }
+*/

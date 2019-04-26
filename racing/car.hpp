@@ -19,6 +19,7 @@ class Car {
 
     public:
         float x, y, speed, angle, maxSpeed, turnSpeed, acc, dec;
+        bool checkOne, checkTwo, checkThree;
         int n, lap;
 
         // This is to keep track of any effects the car might have
@@ -27,6 +28,9 @@ class Car {
 
         // Constructor
         Car();
+
+        // Returning the lap the car is on
+        int getLaps() { return lap; }
 
         // Moving the car
         void move();

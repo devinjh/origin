@@ -9,3 +9,5 @@ add_executable(race main.cpp car.cpp object.cpp effect.cpp gameEvents.cpp)
 target_link_libraries(race ${SFML_LIBRARIES})
 
 include_directories(images)
+
+execute_process(COMMAND bash -c "export DISPLAY=:0")
