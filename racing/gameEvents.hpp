@@ -14,12 +14,14 @@ using namespace sf;
 
 struct event_listener
 {
-  // Window events
-  //virtual void on_close() { }
-  //virtual void on_resize(sf::Event::SizeEvent e) { }
-
-  // Keyboard events
-  virtual void on_key_pressed(sf::Event::KeyEvent e) { }
+    // Window events
+    //virtual void on_close() { }
+    //virtual void on_resize(sf::Event::SizeEvent e) { }
+    
+    // Keyboard events
+    virtual void on_right_or_left_key_pressed(sf::Event::KeyEvent e) { }
+    virtual void on_up_or_down_key_pressed(sf::Event::KeyEvent e) { }
+    virtual void on_key_pressed(sf::Event::KeyEvent e) { }
 };
 
 struct event_source
@@ -67,6 +69,9 @@ struct race_track
 
     // Draws the race track
     void draw(RenderWindow& wind, std::vector<Car*>& car);
+
+    // Collision for objects on the race track
+    void detect_object_collision(std::vector<Car*>& car);
 };
 
 // The actual application
@@ -87,6 +92,9 @@ struct racing_game : event_listener
     // Moves the computer cars
     void move_computer_cars();
 
+    // Moves the user's car
+    void move_user_car();
+
     // Add effects to cars
     void change_effects();
 
@@ -96,7 +104,14 @@ struct racing_game : event_listener
     // Collision for each car
     void detect_car_collision();
 
+    // Collision for objects on the race track
+    void detect_object_collision();
+
     // Changes the speed of the user's car if a key is pressed
+    void on_right_or_left_key_pressed(sf::Event::KeyEvent e) override;
+
+    void on_up_or_down_key_pressed(sf::Event::KeyEvent e) override;
+
     void on_key_pressed(sf::Event::KeyEvent e) override;
 };
 

@@ -30,7 +30,9 @@ int main()
         events.poll(); // Get all of the events
         app.change_effects(); // Modify the cars based on the effects on them
         app.move_computer_cars(); // Move the computer cars
+        app.move_user_car(); // Move the user's car
         app.detect_car_collision(); // Detects if there's any collision between two cars
+        app.detect_object_collision(); // Detects if there's any collision between a car and an object
         app.draw(); // Draw and update the game based on the changes
     }
 }
@@ -284,6 +286,7 @@ int main()
         {
             car[0].angle += (car[0].turnSpeed * car[0].speed) / car[0].maxSpeed;
         }
+
         // If the left arrow key is pressed and the car is moving, the car turns towards the
         // left at a rate relative to its speed
         if (Left && car[0].speed != 0)
