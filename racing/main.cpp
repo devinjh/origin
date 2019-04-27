@@ -27,10 +27,11 @@ int main()
     while(app.is_open())
     {
         //std::cout << "HERE" << std::endl;
-        events.poll();
-        app.change_effects();
-        //app.move_cars();
-        app.draw();
+        events.poll(); // Get all of the events
+        app.change_effects(); // Modify the cars based on the effects on them
+        app.move_computer_cars(); // Move the computer cars
+        app.detect_car_collision(); // Detects if there's any collision between two cars
+        app.draw(); // Draw and update the game based on the changes
     }
 }
 

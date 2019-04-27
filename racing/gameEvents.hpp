@@ -84,14 +84,17 @@ struct racing_game : event_listener
     // Returns true if the window is still open, false otherwise
     bool is_open();
 
-    // Moves the cars
-    void move_cars();
+    // Moves the computer cars
+    void move_computer_cars();
 
     // Add effects to cars
     void change_effects();
 
     // Draws the game
     void draw();
+
+    // Collision for each car
+    void detect_car_collision();
 
     // Changes the speed of the user's car if a key is pressed
     void on_key_pressed(sf::Event::KeyEvent e) override;

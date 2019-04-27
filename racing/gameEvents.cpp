@@ -124,6 +124,20 @@ void race_track::draw(RenderWindow& wind, std::vector<Car*>& car)
     // the second number is how much it's stretched on the y coordinate
     sBackground.scale(2,2); // Makes pixel measurement to be 2880x3648
 
+    // If the user's car goes to far from the left edge, then the screen must move to keep up with
+    // the user's car. This gets the x coordinate of where the center of the screen should be
+    if (car[0]->x > 320)
+    {
+        offsetX = car[0]->x - 320;
+    }
+    // If the user's car goes too far from the top edge, then the screen must move to keep up
+    // with the user's car. This gets the y coordinate of where the center of the screen should
+    // be
+    if (car[0]->y > 240)
+    {
+        offsetY = car[0]->y - 240;
+    }
+
     // Look into
     sCar.setOrigin(22, 22);
     
@@ -170,8 +184,8 @@ racing_game::racing_game() : window(VideoMode(640, 480), "Car Racing Game!")
     window.setFramerateLimit(60);
 
     // This is the number of cars in the game
-    //const int N = 5; // This is for the actual game
-    const int N = 1; // This is for testing
+    const int N = 5; // This is for the actual game
+    //const int N = 1; // This is for testing
 
     // This is the number of cars
     for (int x = 0; x < N; ++x)
@@ -201,19 +215,46 @@ bool racing_game::is_open()
 void racing_game::on_key_pressed(sf::Event::KeyEvent e)
 {
     switch(e.code){
-        //case Keyboard::Right :
-            //std::cout << "RIGHT\n";
-            //return;
-        default :
-            std::cout << "code: " << e.code << "\n";
+        case 74 : // This is for DOWN
+            return;
+        case 73 : // This is for UP
+            return;
+        case 72 : // This is for RIGHT
+            return;
+        case 71 : // This is for LEFT
+            return;
+        default : // No other keys do anything right now, but can easily be added in the future
             return;
     }
 }
 
-// Moves the cars
-void racing_game::move_cars()
+// Moves the computer cars
+void racing_game::move_computer_cars()
 {
-    //event_source events{window};
+    // Going through each step of having the computer cars move
+    for (int i = 1; i < car.size(); ++i)
+    {
+        // This is telling the computer cars where their next target is and how they need to
+        // adjust to get there
+        car[i]->findTarget();
+
+        // If a computer car is going above its maximum speed (meaning it just came off a boostpad)
+        // then it needs to slow down
+        if (car[i]->speed > car[i]->maxSpeed)
+        {
+            car[i]->speed -= (car[i]->dec / 4.0);
+        }
+
+        // This section checks to see if a computer car is going slower than their max speed
+        // If they are, they must be sped up
+        if (car[i]->speed < car[i]->maxSpeed)
+        {
+            car[i]->speed += car[i]->acc;
+        }
+
+        // This is performing the actual moving of every single computer car
+        car[i]->move();
+    }
 }
 
 // Add effects to cars
@@ -244,5 +285,54 @@ void racing_game::change_effects()
 
 void racing_game::draw()
 {
+    // Drawing the 
     raceTrack.draw(window, car);
+}
+
+void racing_game::detect_car_collision()
+{
+    // The square root of the collision box
+    const int R = 22;
+
+    // These loops compare each car with every other car
+    for (int i = 0; i < car.size(); i++)
+    {
+        for (int j = 0; j < car.size(); j++)
+        {      
+            // dx is the difference in pixels between car i and car j in the x axis
+            int dx = 0;
+            // dy is the difference in pixels between car i and car j in the y axis
+            int dy = 0;
+
+            // This loop goes while the difference in pixels squared between car i
+            // and car j is less than 4 times the R value squared
+            // (The R value is declared in the beginning of this function)
+            while (dx * dx + dy * dy < 4 * R * R)
+            {
+                // This moves car i's x coordinate to the right
+                car[i]->x += dy / 10.0;
+                car[i]->x += dx / 10.0;
+                // This moves car j's x coordinate to the left
+                car[j]->x -= dx / 10.0;
+                // This moves car j's y coordinate down
+                car[j]->y -= dy / 10.0;
+                // This calculates the difference in the x and y coordinates of both cars
+                dx = car[i]->x - car[j]->x;
+                dy = car[i]->y - car[j]->y;
+                // If the dx and dy are 0 (zero), then the loop breaks. This is to make
+                // there's not an infinite loop by judging the distance between the same
+                // car (ex: i = j)
+                //
+                // A different way to explain: If dx = 0, then !dx = true
+                //                                dy = 0, then !dy = true
+                //
+                // A different way to explain: If dx != 0, then !dx = false
+                //                                dy != 0, then !dy = false
+                if (!dx && !dy)
+                {
+                    break;
+                }
+            }
+        }
+    }
 }
