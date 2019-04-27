@@ -286,7 +286,6 @@ int main()
         {
             car[0].angle += (car[0].turnSpeed * car[0].speed) / car[0].maxSpeed;
         }
-
         // If the left arrow key is pressed and the car is moving, the car turns towards the
         // left at a rate relative to its speed
         if (Left && car[0].speed != 0)
