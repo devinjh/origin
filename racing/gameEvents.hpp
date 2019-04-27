@@ -52,8 +52,6 @@ struct race_track
 {
     // Variables
     //
-    // Making an array to contain each car
-    std::vector<Car*> car;
     // Keeping track of the textures so the game doesn't put white bozes in place of them
     Texture t1, t2;
     // Making two parallel vectors to contain all of the race track's objects
@@ -66,22 +64,36 @@ struct race_track
 
     // Constructor
     race_track();
+
+    // Draws the race track
+    void draw(RenderWindow& wind, std::vector<Car*>& car);
 };
 
-// The actual application.
+// The actual application
 struct racing_game : event_listener
 {
     // Variables
     race_track raceTrack{};
     sf::RenderWindow window;
+    // Making an array to contain each car
+    std::vector<Car*> car;
 
     // Constructor
     racing_game();
 
-    // This returns true if the window is still open, false otherwise
+    // Returns true if the window is still open, false otherwise
     bool is_open();
 
-    // This changes the speed of the user's car if a key is pressed
+    // Moves the cars
+    void move_cars();
+
+    // Add effects to cars
+    void change_effects();
+
+    // Draws the game
+    void draw();
+
+    // Changes the speed of the user's car if a key is pressed
     void on_key_pressed(sf::Event::KeyEvent e) override;
 };
 

@@ -20,13 +20,17 @@ int main()
 {
     racing_game app{};
 
-    event_source events(app.window);
+    event_source events{app.window};
 
     events.listen(app);
 
     while(app.is_open())
     {
+        //std::cout << "HERE" << std::endl;
         events.poll();
+        app.change_effects();
+        //app.move_cars();
+        app.draw();
     }
 }
 
