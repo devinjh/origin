@@ -732,6 +732,27 @@ void racing_game::move_user_car()
         //std::cout << "RIGHT\n" << std::endl;
     }
 
+    // If neigther the UP or DOWN keys are pressed
+    if (!(keysPressed >> 1 & 0x1 == 0x1 || keysPressed & 0x1 == 0x1))
+    {
+        // If the car is moving in the forward direction
+        if (car[0]->speed - car[0]->dec > 0)
+        {
+            car[0]->speed -= car[0]->dec;
+        }
+        // If the car is moving in the reverse direction
+        else if (car[0]->speed + car[0]->dec < 0)
+        {
+            car[0]->speed += car[0]->dec;
+        }
+        // If the car is pretty muched stopped or is stopped, then the car is set/kept
+        // at a standstill
+        else
+        {
+            car[0]->speed = 0;
+        }
+    }
+
     // This is performing the actual moving of the user's car
     car[0]->move();
 }
