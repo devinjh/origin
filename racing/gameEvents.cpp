@@ -4,15 +4,12 @@
 
 #include "gameEvents.hpp"
 
-
-
-
 // EVENT SOURCE STRUCT
 
 // Constructor
 event_source::event_source(sf::Window& w) : window(&w)
 {
-    // Empty constructor
+    // Empty constructor since the window variable is taken care of
 }
 
 // If there's an event, this picks it up and stores it in the listeners vector
@@ -24,9 +21,13 @@ void event_source::listen(event_listener& l)
 // This sees if there's any events going on
 void event_source::poll()
 {
+    // The event
     sf::Event e;
+
+    // This gets every event that's going on
     while (window->pollEvent(e))
     {
+        // This process the event and performs the appropriate action
         process(e);
     }
 }
@@ -34,6 +35,7 @@ void event_source::poll()
 // This processes any event that's going on and specifies what it is
 void event_source::process(sf::Event const& e)
 {
+    // Figuring out what event transpired
     switch(e.type){
         case Event::KeyPressed:
             return notify([e](event_listener* l) { l->on_key_pressed(e.key); } );
@@ -49,11 +51,17 @@ void event_source::process(sf::Event const& e)
 
 
 
+
+
+
+
+
 // RACE TRACK STRUCT
 
 // Constructor
 race_track::race_track()
 {
+    // Loads all of the textures in from their proper images
     t1.loadFromFile("images/background.png");
     t2.loadFromFile("images/car.png");
     t1.setSmooth(true);
@@ -109,7 +117,8 @@ race_track::race_track()
         ++tIter;
     }
 
-    //float R = 22;
+    // Initializing the offSet variables (which indicate how far away the user's car is from
+    // the coordinate (0, 0))
     offsetX = 0;
     offsetY = 0;
 }
@@ -120,6 +129,7 @@ void race_track::detect_object_collision(std::vector<Car*>& car)
     // These loops compare each car with the objects
     for (std::vector<Object*>::iterator oIter = objects.begin(); oIter != objects.end(); ++oIter)
     {
+        // Making sure each car is tracked
         for (int i = 0; i < car.size(); i++)
         {
             // This calculates the difference in the x and y coordinates of the car
@@ -197,7 +207,6 @@ void race_track::draw(RenderWindow& wind, std::vector<Car*>& car)
         offsetY = car[0]->y - 240;
     }
 
-    // Look into
     sCar.setOrigin(22, 22);
     
     // This changes where the screen is so the user's car stays in the middle, so long as
@@ -225,10 +234,12 @@ void race_track::draw(RenderWindow& wind, std::vector<Car*>& car)
         sCar.setColor(colors[i]);
         wind.draw(sCar);
     }
-    
-    // Look into
+
     wind.display();
 }
+
+
+
 
 
 
@@ -250,13 +261,14 @@ racing_game::racing_game() : window(VideoMode(640, 480), "Car Racing Game!")
     const int N = 5; // This is for the actual game
     //const int N = 1; // This is for testing
 
-    // This is the number of cars
+    // This creates all of the cars
     for (int x = 0; x < N; ++x)
     {
         car.push_back(new Car{});
     }
 
-    // Setting each computer car in their proper starting spot
+    // Setting each computer car in their proper starting spot and adjusting their speed
+    // (This includes the user's car, but some stats are adjusted after)
     for(int i = 0; i < N; i++)
     {
         car[i]->x = 300 + i * 50;
@@ -265,7 +277,7 @@ racing_game::racing_game() : window(VideoMode(640, 480), "Car Racing Game!")
         car[i]->maxSpeed = 7 + i;
     }
 
-    // Setting all the variables for the user's car
+    // Adjusting some of the stats for the user's car
     car[0]->maxSpeed = 12.0;
     car[0]->speed = 0;
 }
@@ -284,6 +296,7 @@ void racing_game::detect_object_collision()
 
 void racing_game::on_key_pressed(sf::Event::KeyEvent e)
 {
+    // Figuring out which key was pressed
     switch(e.code){
         case 74 : // This is for DOWN
             keysPressed = keysPressed | 0x2; // Puts the down bit on
@@ -299,223 +312,36 @@ void racing_game::on_key_pressed(sf::Event::KeyEvent e)
             keysPressed = keysPressed | 0x8; // Turns the left bit on
             //keysPressed = keysPressed & 0xfb; // Turns the right bit off
             break;
-        default : // If no appropriate keys are being pressed, then the car slows down
-            //on_up_or_down_key_pressed(e);
-            //keysPressed = 0;
+        default : // If the key that was pressed does nothing, then nothing is done
             break;
     }
 }
 
 void racing_game::on_key_released(sf::Event::KeyEvent e)
 {
+    // Figuring out which key was released
     switch(e.code){
         case 74 : // This is for DOWN
-            //on_up_or_down_key_pressed(e);
-            //keysPressed = keysPressed | 0x2; // Puts the down bit on
             keysPressed = keysPressed & 0xfd; // Turns the down bit off
             break;
         case 73 : // This is for UP
-            //on_up_or_down_key_pressed(e);
-            //keysPressed = keysPressed | 0x1; // Puts the up bit on
             keysPressed = keysPressed & 0xfe; // Turns the up bit off
-            //keysPressed = keysPressed & 0xfd; // Turns the down bit off
             break;
         case 72 : // This is for RIGHT
-            //on_right_or_left_key_pressed(e);
-            //keysPressed = keysPressed | 0x4; // Turns the right bit on
             keysPressed = keysPressed & 0xfb; // Turns the right bit off
             break;
         case 71 : // This is for LEFT
-            //on_right_or_left_key_pressed(e);
-            //keysPressed = keysPressed | 0x8; // Turns the left bit on
             keysPressed = keysPressed & 0xf7; // Turns the left bit off
             break;
-        default : // If no appropriate keys are being pressed, then the car slows down
-            //on_up_or_down_key_pressed(e);
-            //keysPressed = 0;
+        default : // If the key that was released does nothing, then nothing is done
             break;
     }
 }
 
-/*
-void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
-{
-    switch(e.code){
-        case 74 : // This is for DOWN
-            // If the down arow key has been pressed and the speed of the car is greater than
-            // the max speed in the reverse direction, then the car's speed in the reverse
-            // direction changes
-            if (car[0]->speed > -car[0]->maxSpeed)
-            {
-                // If the car is going in the forward direction (speed > 0), then the car must
-                // be slowed down before it can go in the reverse direction
-                if (car[0]->speed > 0)
-                {
-                    car[0]->speed -= car[0]->dec;
-                }
-                // If the car is going in the reverse direction or isn't moving, then the car
-                // is sped up in the reverse direction
-                else
-                {
-                    car[0]->speed -= car[0]->acc;
-                }
-            }
-            return;
-        case 73 : // This is for UP
-            // If the up arow key has been pressed and the speed of the car is less than
-            // the max speed in the forward direction, then the car's speed in the forward
-            // direction changes
-            if (car[0]->speed < car[0]->maxSpeed)
-            {
-                // If the car is going in the reverse direction (speed < 0), it must slow down before
-                // going in the forward direction. Thus, the car is slowed down
-                if (car[0]->speed < 0) 
-                {
-                    car[0]->speed += car[0]->dec;
-                }
-                // If the car is already going in the forward direction or isn't moving, then
-                // the car is sped up
-                else
-                {
-                    car[0]->speed += car[0]->acc;
-                }
-            }
-            return;
-        /*case 72 : // This is for RIGHT
-            // If the right arrow key is pressed and the car is moving, the car turns towards the
-            // right at a rate relative to its speed
-            if (car[0]->speed != 0) 
-            {
-                car[0]->angle += (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
-            }
-            return;
-        case 71 : // This is for LEFT
-            // If the left arrow key is pressed and the car is moving, the car turns towards the
-            // left at a rate relative to its speed
-            if (car[0]->speed != 0)
-            {
-                car[0]->angle -= (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
-            }
-            return;*/
-/*        default : // If no appropriate keys are being pressed, then the car slows down
-            // If neither the up or down arrow keys are being pressed, the car will slow down
-            // until it comes to a complete stop
-            //
-            // If the car is moving in the forward direction
-            if (car[0]->speed - car[0]->dec > 0)
-            {
-                car[0]->speed -= car[0]->dec;
-            }
-            // If the car is moving in the reverse direction
-            else if (car[0]->speed + car[0]->dec < 0)
-            {
-                car[0]->speed += car[0]->dec;
-            }
-            // If the car is pretty muched stopped or is stopped, then the car is set/kept
-            // at a standstill
-            else
-            {
-                car[0]->speed = 0;
-            }
-            return;
-    }
-}*/
-
-/*void racing_game::on_key_pressed(unsigned char pressed)
-{
-    if (pressed != 0x0)
-    {
-        if (pressed & 0x1 == 0x1)
-        {
-            // If the up arow key has been pressed and the speed of the car is less than
-            // the max speed in the forward direction, then the car's speed in the forward
-            // direction changes
-            if (car[0]->speed < car[0]->maxSpeed)
-            {
-                // If the car is going in the reverse direction (speed < 0), it must slow down before
-                // going in the forward direction. Thus, the car is slowed down
-                if (car[0]->speed < 0) 
-                {
-                    car[0]->speed += car[0]->dec;
-                }
-                // If the car is already going in the forward direction or isn't moving, then
-                // the car is sped up
-                else
-                {
-                    car[0]->speed += car[0]->acc;
-                }
-            }
-        }
-        if ((pressed >> 1) & 0x1 == 0x1)
-        {
-            // If the down arow key has been pressed and the speed of the car is greater than
-            // the max speed in the reverse direction, then the car's speed in the reverse
-            // direction changes
-            if (car[0]->speed > -car[0]->maxSpeed)
-            {
-                // If the car is going in the forward direction (speed > 0), then the car must
-                // be slowed down before it can go in the reverse direction
-                if (car[0]->speed > 0)
-                {
-                    car[0]->speed -= car[0]->dec;
-                }
-                // If the car is going in the reverse direction or isn't moving, then the car
-                // is sped up in the reverse direction
-                else
-                {
-                    car[0]->speed -= car[0]->acc;
-                }
-            }
-        }
-        if ((pressed >> 2) & 0x1 == 0x1)
-        {
-            // If the right arrow key is pressed and the car is moving, the car turns towards the
-            // right at a rate relative to its speed
-            if (car[0]->speed != 0) 
-            {
-                car[0]->angle += (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
-            }
-        }
-        if ((pressed >> 3) & 0x1 == 0x1)
-        {
-            // If the left arrow key is pressed and the car is moving, the car turns towards the
-            // left at a rate relative to its speed
-            if (car[0]->speed != 0)
-            {
-                car[0]->angle -= (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
-            }
-        }
-    }
-    else if ((pressed & 0x3) == 0x1 || (pressed & 0x3) >> 1 == 0x1)
-    {
-        // If neither the up or down arrow keys are being pressed, the car will slow down
-        // until it comes to a complete stop
-        // If the car is moving in the forward direction
-        if (car[0]->speed - car[0]->dec > 0)
-        {
-            car[0]->speed -= car[0]->dec;
-        }
-        // If the car is moving in the reverse direction
-        else if (car[0]->speed + car[0]->dec < 0)
-        {
-            car[0]->speed += car[0]->dec;
-        }
-        // If the car is pretty muched stopped or is stopped, then the car is set/kept
-        // at a standstill
-        else
-        {
-            car[0]->speed = 0;
-        }
-    }
-    else
-    {
-    }
-}*/
-
 // Moves the computer cars
 void racing_game::move_computer_cars()
 {
-    // Going through each step of having the computer cars move
+    // Going through each computer car
     for (int i = 1; i < car.size(); ++i)
     {
         // This is telling the computer cars where their next target is and how they need to
@@ -554,7 +380,7 @@ void racing_game::change_effects()
     // This loop checks for any effects on the cars and applies them appropriately
     for (int i = 0; i < car.size(); ++i)
     {
-        // This creates a vector with all of the effects in it
+        // This creates a vector with all of the effects of the car in it
         std::vector<Effect*> effects = car[i]->getEffects();
         for (std::vector<Effect*>::iterator eIter = effects.begin(); eIter != effects.end(); ++eIter)
         {
@@ -565,7 +391,8 @@ void racing_game::change_effects()
                 car[i]->speed = car[i]->maxSpeed + (*eIter)->getMaxSpeedChange();
 
                 // Adjusting the lap count of the car
-                car[i]->lap += (*eIter)->getLapChange();
+                car[i]->lap += (*eIter)->getLapChange(); // NOTE: This does not work. It's currently just
+                                                        // an experimental feature
 
                 // This checks to see if the effect needs to be turned off
                 (*eIter)->timeOut();
@@ -574,12 +401,14 @@ void racing_game::change_effects()
     }
 }
 
+// Draws the race tracka and all the objects in it
 void racing_game::draw()
 {
     // Drawing the 
     raceTrack.draw(window, car);
 }
 
+// Detecting if any of the cars are colliding
 void racing_game::detect_car_collision()
 {
     // The square root of the collision box
@@ -634,6 +463,7 @@ void racing_game::move_user_car()
     // The UP key is pressed
     if (keysPressed & 0x1 == 0x1)
     {
+        // If the car's curent speed is less than its maximum speed
         if (car[0]->speed < car[0]->maxSpeed)
         {
             // If the car is going in the reverse direction (speed < 0), it must slow down before

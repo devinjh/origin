@@ -5,13 +5,11 @@
 #ifndef EFFECT_HPP
 #define EFFECT_HPP
 
-//#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <time.h>
 #include <iostream>
-//#include "car.hpp"
-//#include "object.hpp"
 
+// Effect struct
 struct Effect {
 
     // Variables necessary for the effects
@@ -46,8 +44,10 @@ struct Effect {
     virtual bool getEffectStatus() const { return inEffect; }
 };
 
+// Mud struct
 struct Mud : Effect {
 
+    // Constructor
     Mud()
     {
         inEffect = false;
@@ -55,6 +55,7 @@ struct Mud : Effect {
         effectTime = 2;
     }
 
+    // This turns on the effect and starts the time for how long the effect lasts
     void turnOnEffect(std::string effectToTurnOn)
     {
         // If the effect name matches this effect's name, then it's turned on
@@ -72,15 +73,18 @@ struct Mud : Effect {
     int getLapChange() const { return 0; }
 };
 
+// Finish struct
 struct Finish : Effect {
 
+    // Constructor
     Finish()
     {
         inEffect = false;
         effectName = "finish";
         effectTime = 2;
     }
-
+    
+    // This turns on the effect and starts the time for how long the effect lasts
     void turnOnEffect(std::string effectToTurnOn)
     {
         // If the effect name matches this effect's name, then it's turned on

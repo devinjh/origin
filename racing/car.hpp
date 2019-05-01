@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include "effect.hpp"
 
+// Class Car
 class Car {
     private:
         const int num = 8; // checkpoints

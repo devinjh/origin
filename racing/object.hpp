@@ -8,8 +8,8 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 #include "car.hpp"
-//#include "effect.hpp"
 
+// The abstract Object struct
 struct Object {
 
     // Variables necessary for the objects
@@ -48,6 +48,7 @@ struct Object {
     virtual std::string getEffectName() const = 0;
 };
 
+// BoostPad struct
 struct BoostPad : Object {
 
     // Constructor
@@ -107,6 +108,7 @@ struct BoostPad : Object {
     std::string getEffectName() const { return ""; }
 };
 
+// Mudpit struct
 struct MudPit : Object {
 
     // Constructor
@@ -166,6 +168,7 @@ struct MudPit : Object {
     std::string getEffectName() const { return "mud"; }
 };
 
+// Finish_Line struct
 struct Finish_Line : Object {
 
     // Constructor

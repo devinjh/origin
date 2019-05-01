@@ -1,4 +1,4 @@
-// This is the game.hpp file for the race game
+// This is the gameEvents.hpp file for the race game
 // Devin Hopkins
 // 4190350
 
@@ -15,12 +15,11 @@ using namespace sf;
 struct event_listener
 {
     // Window events
-    virtual void on_close() { }
-    //virtual void on_resize(sf::Event::SizeEvent e) { }
+    virtual void on_close() { } // What to do if the app is closed
     
     // Keyboard events
-    virtual void on_key_pressed(sf::Event::KeyEvent e) { }
-    virtual void on_key_released(sf::Event::KeyEvent e) { }
+    virtual void on_key_pressed(sf::Event::KeyEvent e) { } // What to do if a key is pressed
+    virtual void on_key_released(sf::Event::KeyEvent e) { } // What to do if a key is released
 };
 
 struct event_source
@@ -32,7 +31,7 @@ struct event_source
     // A vector to store all of the event listeners
     std::vector<event_listener*> listeners;
 
-    // Construstor
+    // Constructor
     event_source(sf::Window& w);
 
     // If there's an event, this picks it up and stores it in the listeners vector
@@ -108,11 +107,10 @@ struct racing_game : event_listener
     // Collision for objects on the race track
     void detect_object_collision();
 
-    //void on_up_or_down_key_pressed(int pressed) override;
-
-    void on_key_pressed(sf::Event::KeyEvent e) override;
-    void on_key_released(sf::Event::KeyEvent e) override;
-    void on_close() override;
+    // Event listener functions
+    void on_key_pressed(sf::Event::KeyEvent e) override; // What to do if a key is pressed
+    void on_key_released(sf::Event::KeyEvent e) override; // What to do if a key is released
+    void on_close() override; // What to do if the app is closed
 };
 
 #endif

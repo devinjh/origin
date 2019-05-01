@@ -4,6 +4,7 @@
 
 #include "car.hpp"
 
+// Constructor
 Car::Car()
 {
     // Setting all the variables to a something
@@ -26,11 +27,13 @@ Car::Car()
     effects.push_back(new Finish());
 }
 
+// This returns a vector that contains pointers to all the effects on the car
 std::vector<Effect*> Car::getEffects()
 {
     return effects;
 }
 
+// This moves the car according to its speed and angle
 void Car::move()
 {
     // Adjusting how fast and what angle the car is moving
