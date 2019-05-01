@@ -36,15 +36,19 @@ void event_source::process(sf::Event const& e)
 {
     switch(e.type){
         case Event::KeyPressed:
-            std::cout << "KEY PRESSED" << std::endl;
+            ////std::cout << "KEY PRESSED" << std::endl;
             return notify([e](event_listener* l) { l->on_key_pressed(e.key); } );
         case Event::KeyReleased:
-            std::cout << "KEY RELEASED" << std::endl;
+            ////std::cout << "KEY RELEASED" << std::endl;
             return notify([e](event_listener* l) { l->on_key_released(e.key); } );
             //return notify([e](event_listener* l) { l->on_key_pressed(e.key); } );
+        case Event::Closed:
+            ////std::cout << "CLOSED" << std::endl;
+            return notify([e](event_listener* l) { l->on_close(); } );
         default:
-            unsigned char temp = 0;
-            return on_key_pressed(temp);
+            break;
+            //unsigned char temp = 0;
+            //return on_key_pressed(temp);
     }
 }
 
@@ -286,7 +290,7 @@ void racing_game::detect_object_collision()
 
 void racing_game::on_key_pressed(sf::Event::KeyEvent e)
 {
-    std::cout << "IN ON_KEY_PRESSED" << std::endl;
+    ////std::cout << "IN ON_KEY_PRESSED" << std::endl;
     //unsigned char keysPressed = 0;
     switch(e.code){
         case 74 : // This is for DOWN
@@ -311,11 +315,10 @@ void racing_game::on_key_pressed(sf::Event::KeyEvent e)
             break;
         default : // If no appropriate keys are being pressed, then the car slows down
             //on_up_or_down_key_pressed(e);
-            keysPressed = 0;
+            //keysPressed = 0;
             break;
     }
-    std::cout << "\n";
-    on_key_pressed(keysPressed);
+    ////std::cout << "\n";
 }
 
 void racing_game::on_key_released(sf::Event::KeyEvent e)
@@ -326,30 +329,41 @@ void racing_game::on_key_released(sf::Event::KeyEvent e)
         case 74 : // This is for DOWN
             //on_up_or_down_key_pressed(e);
             //keysPressed = keysPressed | 0x2; // Puts the down bit on
-            keysPressed = keysPressed & 0xfe; // Turns the up bit off
+            keysPressed = keysPressed & 0xfd; // Turns the down bit off
+            //keysPressed = keysPressed & 0xfe; // Turns the up bit off
+            //std::cout << keysPressed << "\n";
+            std::cout << "DOWN\n";
             break;
         case 73 : // This is for UP
             //on_up_or_down_key_pressed(e);
             //keysPressed = keysPressed | 0x1; // Puts the up bit on
-            keysPressed = keysPressed & 0xfd; // Turns the down bit off
+            keysPressed = keysPressed & 0xfe; // Turns the up bit off
+            //keysPressed = keysPressed & 0xfd; // Turns the down bit off
+            //std::cout << keysPressed << "\n";
+            std::cout << "UP\n";
             break;
         case 72 : // This is for RIGHT
             //on_right_or_left_key_pressed(e);
             //keysPressed = keysPressed | 0x4; // Turns the right bit on
-            keysPressed = keysPressed & 0xf7; // Turns the left bit off
+            keysPressed = keysPressed & 0xfb; // Turns the right bit off
+            //keysPressed = keysPressed & 0xf7; // Turns the left bit off
+            //std::cout << keysPressed << "\n";
+            std::cout << "RIGHT\n";
             break;
         case 71 : // This is for LEFT
             //on_right_or_left_key_pressed(e);
             //keysPressed = keysPressed | 0x8; // Turns the left bit on
-            keysPressed = keysPressed & 0xfb; // Turns the right bit off
+            keysPressed = keysPressed & 0xf7; // Turns the left bit off
+            //keysPressed = keysPressed & 0xfb; // Turns the right bit off
+            //std::cout << keysPressed << "\n";
+            std::cout << "LEFT\n";
             break;
         default : // If no appropriate keys are being pressed, then the car slows down
             //on_up_or_down_key_pressed(e);
-            keysPressed = 0;
+            //keysPressed = 0;
             break;
     }
-    std::cout << "\n";
-    on_key_pressed(keysPressed);
+    ////std::cout << "\n";
 }
 
 /*
@@ -375,7 +389,7 @@ void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
                     car[0]->speed -= car[0]->acc;
                 }
             }
-            //std::cout << "DOWN" << std::endl;
+            //////std::cout << "DOWN" << std::endl;
             return;
         case 73 : // This is for UP
             // If the up arow key has been pressed and the speed of the car is less than
@@ -396,7 +410,7 @@ void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
                     car[0]->speed += car[0]->acc;
                 }
             }
-            //std::cout << "UP" << std::endl;
+            //////std::cout << "UP" << std::endl;
             return;
         /*case 72 : // This is for RIGHT
             // If the right arrow key is pressed and the car is moving, the car turns towards the
@@ -405,7 +419,7 @@ void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
             {
                 car[0]->angle += (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
             }
-            std::cout << "RIGHT" << std::endl;
+            ////std::cout << "RIGHT" << std::endl;
             return;
         case 71 : // This is for LEFT
             // If the left arrow key is pressed and the car is moving, the car turns towards the
@@ -414,7 +428,7 @@ void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
             {
                 car[0]->angle -= (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
             }
-            std::cout << "LEFT" << std::endl;
+            ////std::cout << "LEFT" << std::endl;
             return;*/
 /*        default : // If no appropriate keys are being pressed, then the car slows down
             // If neither the up or down arrow keys are being pressed, the car will slow down
@@ -440,13 +454,13 @@ void racing_game::on_up_or_down_key_pressed(sf::Event::KeyEvent e)
     }
 }*/
 
-void racing_game::on_key_pressed(unsigned char pressed)
+/*void racing_game::on_key_pressed(unsigned char pressed)
 {
     if (pressed != 0x0)
     {
         if (pressed & 0x1 == 0x1)
         {
-            std::cout << "UP\n";
+            ////std::cout << "UP\n";
             // If the up arow key has been pressed and the speed of the car is less than
             // the max speed in the forward direction, then the car's speed in the forward
             // direction changes
@@ -468,7 +482,7 @@ void racing_game::on_key_pressed(unsigned char pressed)
         }
         if ((pressed >> 1) & 0x1 == 0x1)
         {
-            std::cout << "DOWN\n";
+            ////std::cout << "DOWN\n";
             // If the down arow key has been pressed and the speed of the car is greater than
             // the max speed in the reverse direction, then the car's speed in the reverse
             // direction changes
@@ -490,7 +504,7 @@ void racing_game::on_key_pressed(unsigned char pressed)
         }
         if ((pressed >> 2) & 0x1 == 0x1)
         {
-            std::cout << "RIGHT\n";
+            ////std::cout << "RIGHT\n";
             // If the right arrow key is pressed and the car is moving, the car turns towards the
             // right at a rate relative to its speed
             if (car[0]->speed != 0) 
@@ -500,7 +514,7 @@ void racing_game::on_key_pressed(unsigned char pressed)
         }
         if ((pressed >> 3) & 0x1 == 0x1)
         {
-            std::cout << "LEFT\n";
+            ////std::cout << "LEFT\n";
             // If the left arrow key is pressed and the car is moving, the car turns towards the
             // left at a rate relative to its speed
             if (car[0]->speed != 0)
@@ -511,7 +525,7 @@ void racing_game::on_key_pressed(unsigned char pressed)
     }
     else if ((pressed & 0x3) == 0x1 || (pressed & 0x3) >> 1 == 0x1)
     {
-        std::cout << "NEITHER UP NOR DOWN\n";
+        ////std::cout << "NEITHER UP NOR DOWN\n";
         // If neither the up or down arrow keys are being pressed, the car will slow down
         // until it comes to a complete stop
         // If the car is moving in the forward direction
@@ -533,9 +547,9 @@ void racing_game::on_key_pressed(unsigned char pressed)
     }
     else
     {
-        std::cout << "nothing\n";
+        ////std::cout << "nothing\n";
     }
-}
+}*/
 
 // Moves the computer cars
 void racing_game::move_computer_cars()
@@ -649,6 +663,81 @@ void racing_game::detect_car_collision()
 // Moves the user's car
 void racing_game::move_user_car()
 {
+    // The UP key is pressed
+    if (keysPressed & 0x1 == 0x1)
+    {
+        //std::cout << "UP\n";
+        if (car[0]->speed < car[0]->maxSpeed)
+        {
+            // If the car is going in the reverse direction (speed < 0), it must slow down before
+            // going in the forward direction. Thus, the car is slowed down
+            if (car[0]->speed < 0) 
+            {
+                car[0]->speed += car[0]->dec;
+            }
+            // If the car is already going in the forward direction or isn't moving, then
+            // the car is sped up
+            else
+            {
+                car[0]->speed += car[0]->acc;
+            }
+        }
+    }
+
+    // The DOWN key is pressed
+    if (keysPressed >> 1 & 0x1 == 0x1)
+    {
+        //std::cout << "DOWN\n";
+        // If the down arow key has been pressed and the speed of the car is greater than
+        // the max speed in the reverse direction, then the car's speed in the reverse
+        // direction changes
+        if (car[0]->speed > -car[0]->maxSpeed)
+        {
+            // If the car is going in the forward direction (speed > 0), then the car must
+            // be slowed down before it can go in the reverse direction
+            if (car[0]->speed > 0)
+            {
+                car[0]->speed -= car[0]->dec;
+            }
+            // If the car is going in the reverse direction or isn't moving, then the car
+            // is sped up in the reverse direction
+            else
+            {
+                car[0]->speed -= car[0]->acc;
+            }
+        }
+    }
+
+    // If LEFT key is pressed
+    if (keysPressed >> 3 & 0x1 == 0x1)
+    {
+        // If the left arrow key is pressed and the car is moving, the car turns towards the
+        // left at a rate relative to its speed
+        if (car[0]->speed != 0)
+        {
+            car[0]->angle -= (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
+        }
+        //std::cout << "LEFT\n" << std::endl;
+    }
+
+    // If RIGHT key is pressed
+    if (keysPressed >> 2 & 0x1 == 0x1)
+    {
+        // If the right arrow key is pressed and the car is moving, the car turns towards the
+        // right at a rate relative to its speed
+        if (car[0]->speed != 0) 
+        {
+            car[0]->angle += (car[0]->turnSpeed * car[0]->speed) / car[0]->maxSpeed;
+        }
+        //std::cout << "RIGHT\n" << std::endl;
+    }
+
     // This is performing the actual moving of the user's car
     car[0]->move();
+}
+
+// Closing the window
+void racing_game::on_close()
+{
+    window.close();
 }

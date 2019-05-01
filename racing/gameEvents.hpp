@@ -15,12 +15,10 @@ using namespace sf;
 struct event_listener
 {
     // Window events
-    //virtual void on_close() { }
+    virtual void on_close() { }
     //virtual void on_resize(sf::Event::SizeEvent e) { }
     
     // Keyboard events
-    virtual void on_key_pressed(unsigned char pressed) { }
-    //virtual void on_up_or_down_key_pressed(int pressed) { }
     virtual void on_key_pressed(sf::Event::KeyEvent e) { }
     virtual void on_key_released(sf::Event::KeyEvent e) { }
 };
@@ -110,15 +108,11 @@ struct racing_game : event_listener
     // Collision for objects on the race track
     void detect_object_collision();
 
-    // Changes the speed of the user's car if a key is pressed
-    void on_key_pressed(unsigned char pressed) override;
-
     //void on_up_or_down_key_pressed(int pressed) override;
 
     void on_key_pressed(sf::Event::KeyEvent e) override;
     void on_key_released(sf::Event::KeyEvent e) override;
+    void on_close() override;
 };
-
-
 
 #endif
